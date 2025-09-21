@@ -25,10 +25,7 @@ N/A (tracking begins later)
 | username | name |
 
 ### 4. Completed Tasks
-| Task ID | Issue Title                     | Username | Associated Feature |
-|--------|----------------------------------|----------|-------------------|
-| N/A    | Created project requirements doc | N/A      | N/A               |
-| N/A    | Created repository and Kanban board | N/A   | N/A               |
+![Kanban Board for Completed Tasks Week 3](images/completed-tasks-week-3.png)
 
 
 

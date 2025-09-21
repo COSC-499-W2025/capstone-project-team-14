@@ -16,7 +16,7 @@
 * Talked with other groups in class to refine our requirements
 
 **Task from project board**:
-N/A for now as we only worked on requirements
+* "Project Requirements"
 
 **Completed/In-progress tasks**: 
-N/A for now as we only worked on requirements
+* "Project Requirements"
