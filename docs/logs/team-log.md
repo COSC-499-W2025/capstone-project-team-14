@@ -18,7 +18,7 @@ N/A (tracking begins later)
 | GitHub Username | Student Name |
 |-----------------|-------------|
 | abijeet-dhillon | Abijeet Dhillon |
-| username | name |
+| tahsinj | Tahsin Jawwad |
 | username | name |
 | username | name |
 | username | name |
