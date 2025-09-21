@@ -1,18 +1,14 @@
-# Team 14 – Capstone Project Log - Week 3
-
+# Team 14 – Capstone Project Log - [Week Number]
 ## Milestone 1 – [Start Date] to [End Date]
 
 ### 1. Team Name & Timeframe
 **Team 14**  
-Work Performed: September 15 – September 21
+Work Performed: N/A
 
 ---
 
 ### 2. Milestone Goals Recap
-- Planned Features for This Milestone:
-  - Create project requirements document
-  - Set up project repository
-  - Set up Kanban project board
+- Planned Features for This Milestone: N/A
 
 ---
 
@@ -22,13 +18,13 @@ Work Performed: September 15 – September 21
 ---
 
 ### 4. Tasks from Project Board Associated with These Features
-- N/A (Kanban board setup completed this week)
+- N/A
 
 ---
 
 ### 5. Burnup Chart
 ![Burnup Chart Placeholder](./burnup-milestone1.png)  
-N/A (tracking begins later)
+N/A
 
 ---
 
@@ -40,13 +36,12 @@ N/A (tracking begins later)
 ---
 
 ### 7. Completed Tasks (Table View)
-| Task ID | Issue Title                     | Username | Associated Feature |
-|--------|----------------------------------|----------|-------------------|
-| N/A    | Created project requirements doc | N/A      | N/A               |
-| N/A    | Created repository and Kanban board | N/A   | N/A               |
+| Task ID | Issue Title | Username | Associated Feature |
+|--------|-------------|----------|-------------------|
+| N/A    | N/A         | N/A      | N/A               |
 
 ![Completed Tasks Chart Placeholder](./completed-tasks-milestone1.png)  
-N/A (first screenshot will be added later)
+N/A
 
 ---
 
@@ -66,8 +61,6 @@ N/A
 ---
 
 ### 10. Additional Context
-This week focused on foundational project setup work. The team created the project requirements document, initialized the repository, and set up the Kanban project board on GitHub.  
-
-Future weeks will include more detailed documentation of tasks as work progresses.
+N/A
 
 ---
