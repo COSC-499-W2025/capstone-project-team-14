@@ -18,19 +18,19 @@ Future weeks will include more detailed documentation of tasks as work progresse
 ---
 
 ### 4. Features Owned in Project Plan
-- N/A
+- Project Requirements
 
 ---
 
 ### 5. Tasks from Project Board Associated with These Features
-- N/A
+- Project Requirements
 
 ---
 
 ### 6. Tasks Completed / In Progress in the Last 2 Weeks
 | Task ID | Issue Title | Status       | Notes |
 |--------|-------------|-------------|-------|
-| N/A    | N/A         | N/A         | N/A   |
+| 3   | Project Requirements        | Completed        | N/A   |
 
 ---
 
