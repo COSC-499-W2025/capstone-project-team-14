@@ -19,7 +19,7 @@ N/A (tracking begins later)
 |-----------------|-------------|
 | abijeet-dhillon | Abijeet Dhillon |
 | tahsinj | Tahsin Jawwad |
-| username | name |
+| kmerchant1 | Kaiden Merchant |
 | username | name |
 | username | name |
 | username | name |
