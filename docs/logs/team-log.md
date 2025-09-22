@@ -20,8 +20,8 @@ N/A (tracking begins later)
 | abijeet-dhillon | Abijeet Dhillon |
 | tahsinj | Tahsin Jawwad |
 | kmerchant1 | Kaiden Merchant |
-| username | name |
-| username | name |
+| Malik-Abhinav | Abhinav Malik |
+| abdur026 | Abdur Rehman |
 | username | name |
 
 ### 4. Completed Tasks
