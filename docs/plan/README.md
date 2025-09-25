@@ -98,11 +98,9 @@ Our value proposition is a privacy-first, testable, and extensible architecture 
 | R3 Git Adapter | Extract commits, authorship, churn | ... | _TBD_ | H |
 | R4 Office/PDF Adapter | Word/page counts; last-edit time | ... | _TBD_ | M |
 | R5 Media/Design Adapter | Duration/dimensions from metadata | ... | _TBD_ | M |
-| R6 Normalization & Dedupe | Unified schema; hash-based dedupe | ... | _TBD_ | H |
-| R7 PII Redaction | ... | _TBD_ | M |
-| R8 Storage Layer | Persist entities; migrations | ... | _TBD_ | M |
-| R9 Analytics | ... | _TBD_ | M |
-| R10 API Endpoints | REST for artifacts/insights/search | ... | _TBD_ | M |
-| R11 Incremental Scan | Only process changed files | ... | _TBD_ | M |
-| R12 Export | Export insights to JSON/CSV | ... | _TBD_ | E |
-| R13 Notes/Annotations | Users add notes for projects | ... | _TBD_ | E |
+| R6 Storage Layer | Persist entities; migrations | ... | _TBD_ | M |
+| R7 Analytics | ... | _TBD_ | M |
+| R8 API Endpoints | REST for artifacts/insights/search | ... | _TBD_ | M |
+| R9 Incremental Scan | Only process changed files | ... | _TBD_ | M |
+| R10 Export | Export insights to JSON/CSV | ... | _TBD_ | E |
+| R11 Notes/Annotations | Users add notes for projects | ... | _TBD_ | E |
