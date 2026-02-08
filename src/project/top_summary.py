@@ -1,141 +1,68 @@
-"""
-Top projects ranking and summary generation.
-Local-only utilities that operate on ProjectInfo objects produced by src.project.aggregator.
-"""
-from __future__ import annotations
+"""Project ranking and summary generation with user contribution support."""
+import math
+from typing import Iterable, List, Literal, Optional, Tuple
+from dataclasses import dataclass
 
-import csv
-import io
-from dataclasses import asdict
-from typing import Callable, Iterable, List, Literal, Tuple
-
-from .aggregator import ProjectInfo, compute_rank_inputs, compute_preliminary_score, _calculate_user_contribution_score
+from .aggregator import ProjectInfo, compute_rank_inputs, compute_preliminary_score
 
 
-RankingCriteria = Literal[
-    "score",      # use preliminary_score
-    "recency",    # newer (smaller recency_days) ranks higher
-    "commits",    # more total commits ranks higher
-    "loc",        # more lines_of_code ranks higher
-    "impact",     # weighted combo of commits, loc, code_frac
-    "user_contrib", # prioritize user's contribution to projects
-]
+RankingCriteria = Literal["score", "recency", "commits", "loc", "impact", "user_contrib"]
 
 
-def _get_recency_days(pi: ProjectInfo) -> int:
-    return int(pi.rank_inputs.get("recency_days", 0))
+@dataclass
+class RankedProject:
+    """Project with ranking metadata."""
+    project: ProjectInfo
+    rank: int
+    criteria: RankingCriteria
+    score: Optional[float] = None
 
 
-def _ensure_rank(pi: ProjectInfo, user_identifier: Optional[str] = None) -> ProjectInfo:
-    """Ensure project has rank inputs and preliminary score calculated.
-    
-    Args:
-        pi: ProjectInfo object
-        user_identifier: Optional user identifier for contribution scoring
-    """
+def _ensure_rank(pi: ProjectInfo) -> ProjectInfo:
+    """Ensure project has rank_inputs and preliminary_score."""
     if not pi.rank_inputs:
-        pi.rank_inputs = compute_rank_inputs(pi, user_identifier)
-    if not pi.preliminary_score:
+        pi.rank_inputs = compute_rank_inputs(pi)
+    if pi.preliminary_score == 0.0 and pi.rank_inputs:
         pi.preliminary_score = compute_preliminary_score(pi.rank_inputs)
     return pi
 
 
-def _criteria_key(criteria: RankingCriteria, user_identifier: Optional[str] = None) -> Callable[[ProjectInfo], Tuple]:
-    """Get key function for ranking based on criteria.
-    
-    Args:
-        criteria: Ranking criteria to use
-        user_identifier: Optional user identifier for contribution scoring
-    """
-
-    def score_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi, user_identifier)
-        return (pi.preliminary_score, pi.totals.get("commits", 0), pi.lines_of_code)
-
-    def recency_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi, user_identifier)
-        return (_get_recency_days(pi), -pi.totals.get("commits", 0), -pi.lines_of_code)
-
-    def commits_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi, user_identifier)
-        return (pi.totals.get("commits", 0), pi.preliminary_score)
-
-    def loc_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi, user_identifier)
-        return (pi.lines_of_code, pi.preliminary_score)
-
-    def impact_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi, user_identifier)
-        commits = pi.totals.get("commits", 0)
-        loc = max(0, pi.lines_of_code)
-        code_frac = float(pi.rank_inputs.get("code_frac", 0.0))
-        composite = 0.5 * commits + 0.4 * (loc ** 0.5) + 0.1 * (code_frac * 100)
-        return (round(composite, 4), pi.preliminary_score)
-    
-    def user_contrib_key(pi: ProjectInfo):
-        """Custom key that prioritizes user contribution."""
-        pi = _ensure_rank(pi, user_identifier)
-        user_contrib_score = pi.rank_inputs.get("user_contrib_score", 0.0)
-        user_commit_share = pi.rank_inputs.get("user_commit_share", 0.0)
-        # Primary: user contribution score, secondary: commit share, tertiary: overall score
-        return (user_contrib_score, user_commit_share, pi.preliminary_score)
-
-    mapping = {
-        "score": score_key,
-        "recency": recency_key,
-        "commits": commits_key,
-        "loc": loc_key,
-        "impact": impact_key,
-        "user_contrib": user_contrib_key,
-    }
-    return mapping[criteria]
+def _criteria_key(criteria: RankingCriteria, user_identifier: Optional[str] = None):
+    """Return key function for ranking by given criteria."""
+    if criteria == "score":
+        return lambda p: p.preliminary_score
+    elif criteria == "recency":
+        return lambda p: p.rank_inputs.get("recency_days", float('inf'))
+    elif criteria == "commits":
+        return lambda p: p.totals.get("commits", 0)
+    elif criteria == "loc":
+        return lambda p: p.lines_of_code
+    elif criteria == "impact":
+        return lambda p: _impact_score(p)
+    elif criteria == "user_contrib":
+        if not user_identifier:
+            return lambda p: 0.0
+        return lambda p: p.rank_inputs.get("user_contrib_score", 0.0)
+    else:
+        raise ValueError(f"Unknown criteria: {criteria}")
 
 
-def rank_projects(
-    projects: Iterable[ProjectInfo],
-    n: int = 5,
-    criteria: RankingCriteria = "score",
-    user_identifier: Optional[str] = None,
-) -> List[ProjectInfo]:
-    """Rank projects based on specified criteria.
-    
-    Args:
-        projects: Iterable of ProjectInfo objects
-        n: Maximum number of projects to return
-        criteria: Ranking criteria to use
-        user_identifier: Optional user identifier for contribution-based ranking
-    """
-    items = [
-        _ensure_rank(p, user_identifier)
-        for p in projects
-        if isinstance(p, ProjectInfo)
-    ]
-    if not items:
-        return []
-
-    reverse = True if criteria != "recency" else False
-    key_fn = _criteria_key(criteria, user_identifier)
- 
-    ranked = sorted(items, key=key_fn, reverse=reverse)
-    # Limit to 3-5 as acceptance criteria
-    n = max(3, min(5, int(n)))
-    return ranked[:n]
+def _impact_score(pi: ProjectInfo) -> float:
+    """Calculate impact score based on commits, LOC, and duration."""
+    commits = pi.totals.get("commits", 0)
+    loc = pi.lines_of_code
+    days = pi.duration.get("days", 1)
+    return round(commits * math.log1p(loc) / max(1, days), 2)
 
 
 def _contribution_summary(pi: ProjectInfo, user_identifier: Optional[str] = None) -> Tuple[str, float]:
-    """Generate contribution summary for a project.
-    
-    Args:
-        pi: ProjectInfo object
-        user_identifier: Optional user identifier to highlight user's contribution
-    """
+    """Generate contribution summary for a project."""
     authors = pi.authors or []
     if not authors:
         if user_identifier and pi.source == "local":
             return (f"{user_identifier} (Local project)", 1.0)
         return ("Individual contributor", 1.0 if not pi.is_collaborative else 0.0)
         
-    # If user_identifier provided, try to find their contribution
     if user_identifier:
         user_id_lower = user_identifier.lower()
         user_commits = 0
@@ -144,28 +71,43 @@ def _contribution_summary(pi: ProjectInfo, user_identifier: Optional[str] = None
         for author in authors:
             author_email = author.get("email", "").lower()
             author_name = author.get("name", "").lower()
-            
             if user_id_lower in author_email or user_id_lower in author_name:
                 user_commits += author.get("commits", 0)
-                if not user_name:
-                    user_name = author.get("name", "Unknown")
+                user_name = author.get("name")
         
         if user_commits > 0:
-            total_commits = sum(a.get("commits", 0) for a in authors)
-            if total_commits > 0:
-                user_share = user_commits / total_commits
-                return (user_name or user_identifier, user_share)
+            total_commits = sum(author.get("commits", 0) for author in authors)
+            share = user_commits / total_commits if total_commits > 0 else 0.0
+            return (user_name or "User", share)
     
-    # Fallback to original logic
-    total_commits = sum(a.get("commits", 0) for a in authors) or 0
+    total_commits = sum(author.get("commits", 0) for author in authors)
     if total_commits <= 0:
         share = 1.0 / max(1, len(authors))
         name = authors[0].get("name") or "Primary contributor"
         return (name, share)
+    
     top = max(authors, key=lambda a: a.get("commits", 0))
     top_name = top.get("name") or "Top contributor"
     top_share = top.get("commits", 0) / total_commits
     return (top_name, top_share)
+
+
+def rank_projects(
+    projects: Iterable[ProjectInfo],
+    n: int = 5,
+    criteria: RankingCriteria = "score",
+    user_identifier: Optional[str] = None,
+) -> List[ProjectInfo]:
+    items = [_ensure_rank(p) for p in projects if isinstance(p, ProjectInfo)]
+    if not items:
+        return []
+
+    reverse = True if criteria != "recency" else False
+    key_fn = _criteria_key(criteria, user_identifier)
+    
+    ranked = sorted(items, key=key_fn, reverse=reverse)
+    n = max(3, min(5, int(n)))
+    return ranked[:n]
 
 
 def generate_summary(
@@ -173,161 +115,125 @@ def generate_summary(
     max_length: int = 220,
     user_identifier: Optional[str] = None,
 ) -> str:
-    """Generate project summary with optional user contribution focus.
+    """Generate a concise project summary."""
+    if not pi.rank_inputs:
+        pi = _ensure_rank(pi)
     
-    Args:
-        pi: ProjectInfo object
-        max_length: Maximum summary length
-        user_identifier: Optional user identifier for contribution focus
-    """
-    pi = _ensure_rank(pi, user_identifier)
-    name = pi.name
-    score = pi.preliminary_score
-    commits = pi.totals.get("commits", 0)
-    loc = pi.lines_of_code
-    recency = pi.rank_inputs.get("recency_days", 0)
-    langs = ", ".join(pi.languages[:3]) if pi.languages else "N/A"
-    duration_days = pi.duration.get("days", 0)
-
-    contrib_name, contrib_share = _contribution_summary(pi, user_identifier)
-    impact_bits = []
-    if commits:
-        impact_bits.append(f"{commits} commits")
-    if loc:
-        impact_bits.append(f"{loc} LOC")
-    if duration_days:
-        impact_bits.append(f"{duration_days} days")
-
-    impact = ", ".join(impact_bits) if impact_bits else "No metrics"
-    share_pct = int(round(contrib_share * 100))
-    collab = "Collaborative" if pi.is_collaborative else "Solo"
+    contributor_name, share = _contribution_summary(pi, user_identifier)
     
-    # Add user contribution context if available
-    if user_identifier and pi.rank_inputs.get("user_contrib_score", 0.0) > 0:
+    if user_identifier and "Your contribution" not in str(contributor_name):
         user_score = pi.rank_inputs.get("user_contrib_score", 0.0)
-        text = (
-            f"{name} | {collab} | score {score}. "
-            f"Your contribution: {contrib_name} ({share_pct}%), impact {user_score:.1f}. "
-            f"Impact: {impact}. Langs: {langs}. Recency: {recency} days."
-        )
+        if user_score > 0:
+            user_share = pi.rank_inputs.get("user_commit_share", 0.0)
+            contributor_part = f"Your contribution: {contributor_name} ({user_share:.0%}), impact {user_score:.1f}"
+        else:
+            contributor_part = f"Top contributor: {contributor_name} ({share:.0%})"
+    elif user_identifier:
+        contributor_part = f"Your contribution: {contributor_name} ({share:.0%}), impact {pi.rank_inputs.get('user_contrib_score', 0.0):.1f}"
     else:
-        text = (
-            f"{name} | {collab} | score {score}. "
-            f"Top contributor: {contrib_name} ({share_pct}%). "
-            f"Impact: {impact}. Langs: {langs}. Recency: {recency} days."
-        )
-    if len(text) <= max_length:
-        return text
-
-    parts = text.split(". ")
-    out = []
-    for p in parts:
-        candidate = (". ".join(out + [p])).strip()
-        if len(candidate) + 1 <= max_length:  
-            out.append(p)
+        contributor_part = f"Top contributor: {contributor_name} ({share:.0%})"
+    
+    impact = f"Impact: {pi.totals.get('commits', 0)} commits, {pi.lines_of_code} LOC, {pi.duration.get('days', 0)} days"
+    
+    langs = ", ".join(pi.languages[:3]) if pi.languages else "Unknown"
+    langs_part = f"Langs: {langs}"
+    
+    recency = pi.rank_inputs.get("recency_days", 0)
+    recency_part = f"Recency: {recency}d"
+    
+    collab_tag = "Collaborative" if pi.is_collaborative else "Solo"
+    
+    core = f"{pi.name} | {collab_tag} | score {pi.preliminary_score:.4f}. {contributor_part}. {impact}. {langs_part}. {recency_part}."
+    
+    if len(core) <= max_length:
+        return core
+    
+    parts = core.split(". ")
+    result = parts[0]
+    for part in parts[1:]:
+        if len(result) + len(part) + 2 <= max_length:
+            result += ". " + part
         else:
             break
-    res = (". ".join(out)).rstrip()
-    if not res.endswith("."):
-        res += "."
-    return res
+    return result
 
 
 def generate_summaries(
     projects: Iterable[ProjectInfo],
     n: int = 5,
     criteria: RankingCriteria = "score",
-    max_length: int = 220,
     user_identifier: Optional[str] = None,
+    max_length: int = 220,
 ) -> List[dict]:
-    """Generate ranked project summaries.
-    
-    Args:
-        projects: Iterable of ProjectInfo objects
-        n: Maximum number of projects to include
-        criteria: Ranking criteria to use
-        max_length: Maximum summary length
-        user_identifier: Optional user identifier for contribution focus
-    """
+    """Generate ranked summaries for multiple projects."""
     ranked = rank_projects(projects, n=n, criteria=criteria, user_identifier=user_identifier)
-    output = []
-    for rank, pi in enumerate(ranked, start=1):
+    summaries = []
+    
+    for i, pi in enumerate(ranked, 1):
         summary = generate_summary(pi, max_length=max_length, user_identifier=user_identifier)
-        output.append(
-            {
-                "rank": rank,
-                "id": pi.id,
-                "name": pi.name,
-                "score": pi.preliminary_score,
-                "criteria": criteria,
-                "summary": summary,
-                "metrics": {
-                    "commits": pi.totals.get("commits", 0),
-                    "loc": pi.lines_of_code,
-                    "recency_days": pi.rank_inputs.get("recency_days", 0),
-                    "languages": pi.languages,
-                    "duration_days": pi.duration.get("days", 0),
-                    "user_contrib_score": pi.rank_inputs.get("user_contrib_score", 0.0),
-                    "user_commit_share": pi.rank_inputs.get("user_commit_share", 0.0),
-                },
+        summary_dict = {
+            "rank": i,
+            "id": pi.id,
+            "name": pi.name,
+            "score": pi.preliminary_score if criteria == "score" else None,
+            "criteria": criteria,
+            "summary": summary,
+            "metrics": {
+                "commits": pi.totals.get("commits", 0),
+                "loc": pi.lines_of_code,
+                "recency_days": pi.rank_inputs.get("recency_days", 0),
+                "languages": pi.languages,
+                "duration_days": pi.duration.get("days", 0)
             }
-        )
-    return output
+        }
+        summaries.append(summary_dict)
+    
+    return summaries
 
 
 def to_format(
-    summaries: List[dict],
-    fmt: Literal["json", "csv", "text"] = "json",
+    ranked_projects: List[RankedProject] | List[dict],
+    fmt: Literal["text", "markdown", "json"] = "text",
 ) -> str:
-    fmt = fmt.lower()
-    if fmt == "json":
-
-        import json
-        return json.dumps(summaries, ensure_ascii=False, indent=2)
-
-    if fmt == "csv":
-        buf = io.StringIO()
-        writer = csv.writer(buf)
-        writer.writerow([
-            "rank",
-            "id",
-            "name",
-            "score",
-            "criteria",
-            "commits",
-            "loc",
-            "recency_days",
-            "duration_days",
-            "languages",
-            "summary",
-        ])
-        for s in summaries:
-            m = s.get("metrics", {})
-            writer.writerow([
-                s.get("rank"),
-                s.get("id"),
-                s.get("name"),
-                s.get("score"),
-                s.get("criteria"),
-                m.get("commits", 0),
-                m.get("loc", 0),
-                m.get("recency_days", 0),
-                m.get("duration_days", 0),
-                ";".join(m.get("languages", [])[:5]),
-                s.get("summary", ""),
-            ])
-        return buf.getvalue()
-
+    """Format ranked projects list."""
     if fmt == "text":
         lines = []
-        for s in summaries:
-            m = s.get("metrics", {})
-            line = (
-                f"#{s.get('rank')}: {s.get('name')} (score {s.get('score')}) - "
-                f"commits {m.get('commits', 0)}, loc {m.get('loc', 0)}, "
-                f"recency {m.get('recency_days', 0)}d\n    {s.get('summary', '')}"
-            )
-            lines.append(line)
+        for item in ranked_projects:
+            if isinstance(item, dict):
+                score_part = f" - score {item['score']}" if item['score'] is not None else ""
+                lines.append(f"#{item['rank']}: {item['name']}{score_part}")
+                lines.append(f" {item['summary']}")
+            else:
+                score_part = f" - score {item.score}" if item.score is not None else ""
+                lines.append(f"#{item.rank}: {item.project.name}{score_part}")
+                lines.append(f" {generate_summary(item.project, user_identifier=None)}")
         return "\n".join(lines)
-
-    raise ValueError("Unsupported format; use 'json', 'csv', or 'text'")
+    
+    elif fmt == "markdown":
+        lines = []
+        for item in ranked_projects:
+            if isinstance(item, dict):
+                score_part = f" (score: {item['score']})" if item['score'] is not None else ""
+                lines.append(f"### #{item['rank']}: {item['name']}{score_part}")
+                lines.append(f"{item['summary']}")
+            else:
+                score_part = f" (score: {item.score})" if item.score is not None else ""
+                lines.append(f"### #{item.rank}: {item.project.name}{score_part}")
+                lines.append(f"{generate_summary(item.project, user_identifier=None)}")
+            lines.append("")
+        return "\n".join(lines)
+    
+    elif fmt == "json":
+        import json
+        return json.dumps([
+            {
+                "rank": item['rank'] if isinstance(item, dict) else item.rank,
+                "name": item['name'] if isinstance(item, dict) else item.project.name,
+                "score": item['score'] if isinstance(item, dict) else item.score,
+                "summary": item['summary'] if isinstance(item, dict) else generate_summary(item.project, user_identifier=None)
+            }
+            for item in ranked_projects
+        ], indent=2)
+    
+    else:
+        raise ValueError(f"Unknown format: {fmt}")

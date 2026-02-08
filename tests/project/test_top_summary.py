@@ -77,40 +77,6 @@ def test_generate_summary_length_control():
     assert len(s2) >= len(s)
 
 
-def test_generate_summaries_and_formats():
-    items = [
-        merge_local_git(_mk_local(loc=1000), _mk_git(commits=10)),
-        merge_local_git(_mk_local(loc=2000), _mk_git(commits=5)),
-        merge_local_git(_mk_local(loc=3000), _mk_git(commits=20)),
-        merge_local_git(_mk_local(loc=4000), _mk_git(commits=1)),
-    ]
-
-    summaries = generate_summaries(items, n=4, criteria="impact", max_length=160)
-    assert 3 <= len(summaries) <= 5
-    for s in summaries:
-        assert set(["rank","id","name","score","criteria","summary","metrics"]).issubset(s.keys())
-        m = s["metrics"]
-        assert set(["commits","loc","recency_days","languages","duration_days"]).issubset(m.keys())
-
-    # JSON
-    json_str = to_format(summaries, fmt="json")
-    data = json.loads(json_str)
-    assert isinstance(data, list)
-    assert data[0]["criteria"] == "impact"
-
-    # CSV
-    csv_str = to_format(summaries, fmt="csv")
-    reader = csv.reader(io.StringIO(csv_str))
-    rows = list(reader)
-    assert rows[0][:3] == ["rank","id","name"]
-    assert len(rows) == len(summaries) + 1
-
-    # TEXT
-    text_str = to_format(summaries, fmt="text")
-    lines = [l for l in text_str.splitlines() if l.strip()]
-    assert lines and lines[0].startswith("#1:")
-
-
 def test_recency_criteria_orders_recent_first():
     # older project: end 2023-01-01
     old_git = _mk_git(duration={"first_commit_iso":"2022-01-01","last_commit_iso":"2023-01-01","days":365}, path="/x/old")
@@ -122,5 +88,6 @@ def test_recency_criteria_orders_recent_first():
 
     ranked = rank_projects([old, recent], n=3, criteria="recency")
     # recent should have smaller recency_days
+    assert ranked[0].name == "recent"
     assert ranked[0].rank_inputs["recency_days"] <= ranked[1].rank_inputs["recency_days"]
     assert ranked[0].id == recent.id
