@@ -32,7 +32,67 @@ class ProjectInfo:
     preliminary_score: float
 
 
-# Extension to language name mapping
+def _calculate_user_contribution_score(pi: ProjectInfo, user_identifier: str) -> tuple[float, float]:
+    """Calculate user-specific contribution score for a project.
+    
+    Args:
+        pi: ProjectInfo object
+        user_identifier: User email or name to match against authors
+        
+    Returns:
+        Tuple of (contribution_score, commit_share)
+    """
+    if not pi.authors:
+         
+        if pi.source == "local":
+            return (1.0, 1.0)
+        return (0.0, 0.0)
+    
+   
+    user_id_lower = user_identifier.lower()
+    
+    
+    matching_authors = []
+    for author in pi.authors:
+        author_email = author.get("email", "").lower()
+        author_name = author.get("name", "").lower()
+        
+        
+        if user_id_lower in author_email or user_id_lower in author_name:
+            matching_authors.append(author)
+    
+    if not matching_authors:
+        return (0.0, 0.0)
+    
+    
+    user_commits = sum(author.get("commits", 0) for author in matching_authors)
+    total_commits = sum(author.get("commits", 0) for author in pi.authors)
+    
+    if total_commits == 0:
+        return (0.0, 0.0)
+    
+    
+    commit_share = user_commits / total_commits
+    
+    if commit_share >= 0.8:
+        contrib_score = 1.0  
+    elif commit_share >= 0.5:
+        contrib_score = 0.8  
+    elif commit_share >= 0.2:
+        contrib_score = 0.6  
+    elif commit_share >= 0.1:
+        contrib_score = 0.4  
+    else:
+        contrib_score = 0.2  
+    
+    
+    if len(pi.authors) == 1 and commit_share > 0:
+        contrib_score = min(1.0, contrib_score * 1.2)
+    
+    return (contrib_score, commit_share)
+
+
+
 EXT_TO_LANG = {
     ".py": "Python",
     ".js": "JavaScript",
@@ -62,7 +122,7 @@ def _parse_iso_date(date_str: Optional[str]) -> Optional[datetime.date]:
     if not date_str:
         return None
     try:
-        # Handle ISO format with or without time/timezone
+     
         date_part = date_str.split('T')[0]
         return datetime.date.fromisoformat(date_part)
     except (ValueError, AttributeError):
@@ -83,7 +143,7 @@ def _normalize_languages(lang_data) -> list:
     if isinstance(lang_data, list):
         if not lang_data:
             return []
-        # Check if it's a list of dicts with "ext" key
+        
         if isinstance(lang_data[0], dict) and "ext" in lang_data[0]:
             result = []
             for item in lang_data:
@@ -92,7 +152,7 @@ def _normalize_languages(lang_data) -> list:
                 if lang not in result:
                     result.append(lang)
             return result
-        # Already a list of strings
+       
         return [str(x) for x in lang_data]
     
     return []
@@ -113,13 +173,21 @@ def _union_lists(list1: list, list2: list) -> list:
     return result
 
 
-def compute_rank_inputs(pi: ProjectInfo) -> dict:
-    """Compute rank inputs from ProjectInfo fields."""
+def compute_rank_inputs(pi: ProjectInfo, user_identifier: Optional[str] = None) -> dict:
+    """Compute rank inputs from ProjectInfo fields.
+    
+    Args:
+        pi: ProjectInfo object
+        user_identifier: Optional user email/name to factor user contributions
+    
+    Returns:
+        Dictionary of ranking inputs
+    """
     loc = pi.lines_of_code
     commits = pi.totals.get("commits", 0)
     skills_breadth = len(pi.skills)
     
-    # Compute recency_days
+    
     end_str = pi.duration.get("end")
     recency_days = 0
     if end_str:
@@ -130,12 +198,18 @@ def compute_rank_inputs(pi: ProjectInfo) -> dict:
     
     is_collab = 1 if pi.is_collaborative else 0
     
-    # Compute code_frac
+    
     code = pi.activity_mix.get("code", 0)
     test = pi.activity_mix.get("test", 0)
     doc = pi.activity_mix.get("doc", 0)
     total_activity = code + test + doc
     code_frac = code / max(1, total_activity) if total_activity > 0 else 0.0
+    
+    
+    user_contrib_score = 0.0
+    user_commit_share = 0.0
+    if user_identifier:
+        user_contrib_score, user_commit_share = _calculate_user_contribution_score(pi, user_identifier)
     
     return {
         "loc": loc,
@@ -144,18 +218,26 @@ def compute_rank_inputs(pi: ProjectInfo) -> dict:
         "recency_days": recency_days,
         "is_collab": is_collab,
         "code_frac": code_frac,
+        "user_contrib_score": user_contrib_score,
+        "user_commit_share": user_commit_share,
     }
 
 
-def compute_preliminary_score(rank_inputs: dict) -> float:
-    """Compute preliminary score from rank inputs."""
+def compute_preliminary_score(rank_inputs: dict, user_weight: float = 0.3) -> float:
+    """Compute preliminary score from rank inputs.
+    
+    Args:
+        rank_inputs: Dictionary of ranking inputs
+        user_weight: Weight for user contribution score (0.0-1.0)
+    """
     loc = rank_inputs.get("loc", 0)
     commits = rank_inputs.get("commits", 0)
     skills_breadth = rank_inputs.get("skills_breadth", 0)
     recency_days = rank_inputs.get("recency_days", 0)
     is_collab = rank_inputs.get("is_collab", 0)
+    user_contrib_score = rank_inputs.get("user_contrib_score", 0.0)
     
-    # Recency score
+   
     if recency_days <= 180:
         recency_score = 1.0
     elif recency_days <= 365:
@@ -163,7 +245,8 @@ def compute_preliminary_score(rank_inputs: dict) -> float:
     else:
         recency_score = 0.1
     
-    score = (
+    
+    base_score = (
         0.35 * math.log1p(loc) +
         0.35 * math.log1p(commits) +
         0.20 * skills_breadth +
@@ -171,14 +254,31 @@ def compute_preliminary_score(rank_inputs: dict) -> float:
         0.05 * is_collab
     )
     
-    return round(score, 4)
+    
+    if user_contrib_score > 0:
+         
+        remaining_weight = 1.0 - user_weight
+        final_score = (
+            remaining_weight * base_score +
+            user_weight * user_contrib_score
+        )
+    else:
+        final_score = base_score
+    
+    return round(final_score, 4)
 
 
-def from_local(root_dir: str, local_metrics: dict) -> ProjectInfo:
-    """Create ProjectInfo from local analyzer metrics."""
+def from_local(root_dir: str, local_metrics: dict, user_identifier: Optional[str] = None) -> ProjectInfo:
+    """Create ProjectInfo from local analyzer metrics.
+    
+    Args:
+        root_dir: Root directory path
+        local_metrics: Local analysis metrics
+        user_identifier: Optional user email/name for contribution scoring
+    """
     name = Path(root_dir).name
     
-    # Extract fields with defaults
+    
     languages = _safe_get(local_metrics, "languages", [])
     frameworks = _safe_get(local_metrics, "frameworks", [])
     skills = _safe_get(local_metrics, "skills", [])
@@ -204,9 +304,9 @@ def from_local(root_dir: str, local_metrics: dict) -> ProjectInfo:
     if not isinstance(notes, list):
         notes = []
     
-    # Create ProjectInfo with placeholder rank_inputs and score
+    
     pi = ProjectInfo(
-        id="",  # Will be computed after
+        id="",  
         name=name,
         source="local",
         duration=duration,
@@ -224,15 +324,21 @@ def from_local(root_dir: str, local_metrics: dict) -> ProjectInfo:
     )
     
     # Compute rank inputs and score
-    pi.rank_inputs = compute_rank_inputs(pi)
+    pi.rank_inputs = compute_rank_inputs(pi, user_identifier)
     pi.preliminary_score = compute_preliminary_score(pi.rank_inputs)
     pi.id = _compute_id(pi.name, pi.source, pi.duration.get("end"))
     
     return pi
 
 
-def from_git(repo_path: str, git_metrics: dict) -> ProjectInfo:
-    """Create ProjectInfo from git analyzer metrics."""
+def from_git(repo_path: str, git_metrics: dict, user_identifier: Optional[str] = None) -> ProjectInfo:
+    """Create ProjectInfo from git analyzer metrics.
+    
+    Args:
+        repo_path: Repository path
+        git_metrics: Git analysis metrics  
+        user_identifier: Optional user email/name for contribution scoring
+    """
     name = Path(repo_path).name
     
     # Authors
@@ -307,24 +413,30 @@ def from_git(repo_path: str, git_metrics: dict) -> ProjectInfo:
     )
     
     # Compute rank inputs and score
-    pi.rank_inputs = compute_rank_inputs(pi)
+    pi.rank_inputs = compute_rank_inputs(pi, user_identifier)
     pi.preliminary_score = compute_preliminary_score(pi.rank_inputs)
     pi.id = _compute_id(pi.name, pi.source, pi.duration.get("end"))
     
     return pi
 
 
-def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo) -> ProjectInfo:
-    """Merge local and git ProjectInfo into a single merged ProjectInfo."""
-    # Name: prefer git if present
+def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo, user_identifier: Optional[str] = None) -> ProjectInfo:
+    """Merge local and git ProjectInfo into a single merged ProjectInfo.
+    
+    Args:
+        local_pi: Local ProjectInfo
+        git_pi: Git ProjectInfo
+        user_identifier: Optional user email/name for contribution scoring
+    """
+    
     name = git_pi.name if git_pi.name else local_pi.name
     
-    # Duration: prefer git, but compute wider span if both present
+   
     duration = git_pi.duration.copy()
     if not duration.get("start") and local_pi.duration.get("start"):
         duration = local_pi.duration.copy()
     elif duration.get("start") and local_pi.duration.get("start"):
-        # Both have duration - take wider span
+        
         git_start = _parse_iso_date(git_pi.duration.get("start"))
         git_end = _parse_iso_date(git_pi.duration.get("end"))
         local_start = _parse_iso_date(local_pi.duration.get("start"))
@@ -342,7 +454,7 @@ def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo) -> ProjectInfo:
                 "days": (final_end - final_start).days,
             }
     
-    # Authors and is_collaborative from git
+  
     authors = git_pi.authors
     is_collaborative = git_pi.is_collaborative
     
@@ -351,12 +463,12 @@ def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo) -> ProjectInfo:
     frameworks = _union_lists(local_pi.frameworks, git_pi.frameworks)
     skills = _union_lists(local_pi.skills, git_pi.skills)
     
-    # Activity mix: prefer git if present
+    
     activity_mix = git_pi.activity_mix.copy()
     if sum(activity_mix.values()) == 0:
         activity_mix = local_pi.activity_mix.copy()
     
-    # Lines of code: prefer local if > 0
+    
     lines_of_code = local_pi.lines_of_code if local_pi.lines_of_code > 0 else git_pi.lines_of_code
     
     # Totals: max files, git commits
@@ -365,7 +477,7 @@ def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo) -> ProjectInfo:
         "commits": git_pi.totals.get("commits", 0),
     }
     
-    # Notes: concatenate and dedupe
+   
     notes = _union_lists(local_pi.notes, git_pi.notes)
     
     # Create merged ProjectInfo
@@ -388,7 +500,7 @@ def merge_local_git(local_pi: ProjectInfo, git_pi: ProjectInfo) -> ProjectInfo:
     )
     
     # Recompute rank inputs and score
-    pi.rank_inputs = compute_rank_inputs(pi)
+    pi.rank_inputs = compute_rank_inputs(pi, user_identifier)
     pi.preliminary_score = compute_preliminary_score(pi.rank_inputs)
     pi.id = _compute_id(pi.name, pi.source, pi.duration.get("end"))
     
@@ -417,6 +529,8 @@ def main():
     parser.add_argument("--repo", help="Repository path for git mode")
     parser.add_argument("--local-metrics", help="Local metrics JSON for merge mode")
     parser.add_argument("--git-metrics", help="Git metrics JSON for merge mode")
+    parser.add_argument("--user", help="User email or name for contribution-based ranking")
+    parser.add_argument("--user-weight", type=float, default=0.3, help="Weight for user contribution score (0.0-1.0)")
     
     args = parser.parse_args()
     
@@ -429,7 +543,7 @@ def main():
             with open(args.metrics, 'r') as f:
                 local_metrics = json.load(f)
             
-            pi = from_local(args.root, local_metrics)
+            pi = from_local(args.root, local_metrics, args.user)
             print(json.dumps(to_dict(pi), indent=2))
         
         elif args.mode == "git":
@@ -440,7 +554,7 @@ def main():
             with open(args.metrics, 'r') as f:
                 git_metrics = json.load(f)
             
-            pi = from_git(args.repo, git_metrics)
+            pi = from_git(args.repo, git_metrics, args.user)
             print(json.dumps(to_dict(pi), indent=2))
         
         elif args.mode == "merge":
@@ -453,9 +567,9 @@ def main():
             with open(args.git_metrics, 'r') as f:
                 git_metrics = json.load(f)
             
-            local_pi = from_local(args.root, local_metrics)
-            git_pi = from_git(args.repo, git_metrics)
-            merged_pi = merge_local_git(local_pi, git_pi)
+            local_pi = from_local(args.root, local_metrics, args.user)
+            git_pi = from_git(args.repo, git_metrics, args.user)
+            merged_pi = merge_local_git(local_pi, git_pi, args.user)
             
             print(json.dumps(to_dict(merged_pi), indent=2))
     

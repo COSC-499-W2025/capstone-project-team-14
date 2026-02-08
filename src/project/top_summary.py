@@ -9,7 +9,7 @@ import io
 from dataclasses import asdict
 from typing import Callable, Iterable, List, Literal, Tuple
 
-from .aggregator import ProjectInfo, compute_rank_inputs, compute_preliminary_score
+from .aggregator import ProjectInfo, compute_rank_inputs, compute_preliminary_score, _calculate_user_contribution_score
 
 
 RankingCriteria = Literal[
@@ -18,6 +18,7 @@ RankingCriteria = Literal[
     "commits",    # more total commits ranks higher
     "loc",        # more lines_of_code ranks higher
     "impact",     # weighted combo of commits, loc, code_frac
+    "user_contrib", # prioritize user's contribution to projects
 ]
 
 
@@ -25,40 +26,59 @@ def _get_recency_days(pi: ProjectInfo) -> int:
     return int(pi.rank_inputs.get("recency_days", 0))
 
 
-def _ensure_rank(pi: ProjectInfo) -> ProjectInfo:
-   
+def _ensure_rank(pi: ProjectInfo, user_identifier: Optional[str] = None) -> ProjectInfo:
+    """Ensure project has rank inputs and preliminary score calculated.
+    
+    Args:
+        pi: ProjectInfo object
+        user_identifier: Optional user identifier for contribution scoring
+    """
     if not pi.rank_inputs:
-        pi.rank_inputs = compute_rank_inputs(pi)
+        pi.rank_inputs = compute_rank_inputs(pi, user_identifier)
     if not pi.preliminary_score:
         pi.preliminary_score = compute_preliminary_score(pi.rank_inputs)
     return pi
 
 
-def _criteria_key(criteria: RankingCriteria) -> Callable[[ProjectInfo], Tuple]:
+def _criteria_key(criteria: RankingCriteria, user_identifier: Optional[str] = None) -> Callable[[ProjectInfo], Tuple]:
+    """Get key function for ranking based on criteria.
+    
+    Args:
+        criteria: Ranking criteria to use
+        user_identifier: Optional user identifier for contribution scoring
+    """
 
     def score_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi)
+        pi = _ensure_rank(pi, user_identifier)
         return (pi.preliminary_score, pi.totals.get("commits", 0), pi.lines_of_code)
 
     def recency_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi)
+        pi = _ensure_rank(pi, user_identifier)
         return (_get_recency_days(pi), -pi.totals.get("commits", 0), -pi.lines_of_code)
 
     def commits_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi)
+        pi = _ensure_rank(pi, user_identifier)
         return (pi.totals.get("commits", 0), pi.preliminary_score)
 
     def loc_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi)
+        pi = _ensure_rank(pi, user_identifier)
         return (pi.lines_of_code, pi.preliminary_score)
 
     def impact_key(pi: ProjectInfo):
-        pi = _ensure_rank(pi)
+        pi = _ensure_rank(pi, user_identifier)
         commits = pi.totals.get("commits", 0)
         loc = max(0, pi.lines_of_code)
         code_frac = float(pi.rank_inputs.get("code_frac", 0.0))
         composite = 0.5 * commits + 0.4 * (loc ** 0.5) + 0.1 * (code_frac * 100)
         return (round(composite, 4), pi.preliminary_score)
+    
+    def user_contrib_key(pi: ProjectInfo):
+        """Custom key that prioritizes user contribution."""
+        pi = _ensure_rank(pi, user_identifier)
+        user_contrib_score = pi.rank_inputs.get("user_contrib_score", 0.0)
+        user_commit_share = pi.rank_inputs.get("user_commit_share", 0.0)
+        # Primary: user contribution score, secondary: commit share, tertiary: overall score
+        return (user_contrib_score, user_commit_share, pi.preliminary_score)
 
     mapping = {
         "score": score_key,
@@ -66,6 +86,7 @@ def _criteria_key(criteria: RankingCriteria) -> Callable[[ProjectInfo], Tuple]:
         "commits": commits_key,
         "loc": loc_key,
         "impact": impact_key,
+        "user_contrib": user_contrib_key,
     }
     return mapping[criteria]
 
@@ -74,9 +95,18 @@ def rank_projects(
     projects: Iterable[ProjectInfo],
     n: int = 5,
     criteria: RankingCriteria = "score",
+    user_identifier: Optional[str] = None,
 ) -> List[ProjectInfo]:
+    """Rank projects based on specified criteria.
+    
+    Args:
+        projects: Iterable of ProjectInfo objects
+        n: Maximum number of projects to return
+        criteria: Ranking criteria to use
+        user_identifier: Optional user identifier for contribution-based ranking
+    """
     items = [
-        _ensure_rank(p)
+        _ensure_rank(p, user_identifier)
         for p in projects
         if isinstance(p, ProjectInfo)
     ]
@@ -84,7 +114,7 @@ def rank_projects(
         return []
 
     reverse = True if criteria != "recency" else False
-    key_fn = _criteria_key(criteria)
+    key_fn = _criteria_key(criteria, user_identifier)
  
     ranked = sorted(items, key=key_fn, reverse=reverse)
     # Limit to 3-5 as acceptance criteria
@@ -92,15 +122,43 @@ def rank_projects(
     return ranked[:n]
 
 
-def _contribution_summary(pi: ProjectInfo) -> Tuple[str, float]:
+def _contribution_summary(pi: ProjectInfo, user_identifier: Optional[str] = None) -> Tuple[str, float]:
+    """Generate contribution summary for a project.
+    
+    Args:
+        pi: ProjectInfo object
+        user_identifier: Optional user identifier to highlight user's contribution
+    """
     authors = pi.authors or []
     if not authors:
-      
+        if user_identifier and pi.source == "local":
+            return (f"{user_identifier} (Local project)", 1.0)
         return ("Individual contributor", 1.0 if not pi.is_collaborative else 0.0)
-    # compute top author share by commits if available
+        
+    # If user_identifier provided, try to find their contribution
+    if user_identifier:
+        user_id_lower = user_identifier.lower()
+        user_commits = 0
+        user_name = None
+        
+        for author in authors:
+            author_email = author.get("email", "").lower()
+            author_name = author.get("name", "").lower()
+            
+            if user_id_lower in author_email or user_id_lower in author_name:
+                user_commits += author.get("commits", 0)
+                if not user_name:
+                    user_name = author.get("name", "Unknown")
+        
+        if user_commits > 0:
+            total_commits = sum(a.get("commits", 0) for a in authors)
+            if total_commits > 0:
+                user_share = user_commits / total_commits
+                return (user_name or user_identifier, user_share)
+    
+    # Fallback to original logic
     total_commits = sum(a.get("commits", 0) for a in authors) or 0
     if total_commits <= 0:
-        
         share = 1.0 / max(1, len(authors))
         name = authors[0].get("name") or "Primary contributor"
         return (name, share)
@@ -113,8 +171,16 @@ def _contribution_summary(pi: ProjectInfo) -> Tuple[str, float]:
 def generate_summary(
     pi: ProjectInfo,
     max_length: int = 220,
+    user_identifier: Optional[str] = None,
 ) -> str:
-    pi = _ensure_rank(pi)
+    """Generate project summary with optional user contribution focus.
+    
+    Args:
+        pi: ProjectInfo object
+        max_length: Maximum summary length
+        user_identifier: Optional user identifier for contribution focus
+    """
+    pi = _ensure_rank(pi, user_identifier)
     name = pi.name
     score = pi.preliminary_score
     commits = pi.totals.get("commits", 0)
@@ -123,7 +189,7 @@ def generate_summary(
     langs = ", ".join(pi.languages[:3]) if pi.languages else "N/A"
     duration_days = pi.duration.get("days", 0)
 
-    contrib_name, contrib_share = _contribution_summary(pi)
+    contrib_name, contrib_share = _contribution_summary(pi, user_identifier)
     impact_bits = []
     if commits:
         impact_bits.append(f"{commits} commits")
@@ -135,12 +201,21 @@ def generate_summary(
     impact = ", ".join(impact_bits) if impact_bits else "No metrics"
     share_pct = int(round(contrib_share * 100))
     collab = "Collaborative" if pi.is_collaborative else "Solo"
-
-    text = (
-        f"{name} | {collab} | score {score}. "
-        f"Top contributor: {contrib_name} ({share_pct}%). "
-        f"Impact: {impact}. Langs: {langs}. Recency: {recency} days."
-    )
+    
+    # Add user contribution context if available
+    if user_identifier and pi.rank_inputs.get("user_contrib_score", 0.0) > 0:
+        user_score = pi.rank_inputs.get("user_contrib_score", 0.0)
+        text = (
+            f"{name} | {collab} | score {score}. "
+            f"Your contribution: {contrib_name} ({share_pct}%), impact {user_score:.1f}. "
+            f"Impact: {impact}. Langs: {langs}. Recency: {recency} days."
+        )
+    else:
+        text = (
+            f"{name} | {collab} | score {score}. "
+            f"Top contributor: {contrib_name} ({share_pct}%). "
+            f"Impact: {impact}. Langs: {langs}. Recency: {recency} days."
+        )
     if len(text) <= max_length:
         return text
 
@@ -163,11 +238,21 @@ def generate_summaries(
     n: int = 5,
     criteria: RankingCriteria = "score",
     max_length: int = 220,
+    user_identifier: Optional[str] = None,
 ) -> List[dict]:
-    ranked = rank_projects(projects, n=n, criteria=criteria)
+    """Generate ranked project summaries.
+    
+    Args:
+        projects: Iterable of ProjectInfo objects
+        n: Maximum number of projects to include
+        criteria: Ranking criteria to use
+        max_length: Maximum summary length
+        user_identifier: Optional user identifier for contribution focus
+    """
+    ranked = rank_projects(projects, n=n, criteria=criteria, user_identifier=user_identifier)
     output = []
     for rank, pi in enumerate(ranked, start=1):
-        summary = generate_summary(pi, max_length=max_length)
+        summary = generate_summary(pi, max_length=max_length, user_identifier=user_identifier)
         output.append(
             {
                 "rank": rank,
@@ -182,6 +267,8 @@ def generate_summaries(
                     "recency_days": pi.rank_inputs.get("recency_days", 0),
                     "languages": pi.languages,
                     "duration_days": pi.duration.get("days", 0),
+                    "user_contrib_score": pi.rank_inputs.get("user_contrib_score", 0.0),
+                    "user_commit_share": pi.rank_inputs.get("user_commit_share", 0.0),
                 },
             }
         )

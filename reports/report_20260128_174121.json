@@ -1,0 +1,1455 @@
+{
+  "zip_metadata": {
+    "root_name": "demo_capstone_project.zip",
+    "file_count": 13,
+    "total_uncompressed_bytes": 45265,
+    "total_compressed_bytes": 14662
+  },
+  "file_info": [
+    {
+      "abs_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/README.md",
+      "rel_path": "demo_capstone_project/README.md",
+      "size": 3752,
+      "compressed_size": 1553,
+      "is_compressed": true,
+      "sha256": "04951215ab0c09a30a7997bd0cb0ae3988282417934d1d3763ff8d7c5c2c5eb1",
+      "depth": 1,
+      "ext": "md",
+      "is_text_guess": true
+    }
+  ],
+  "categorized_contents": {
+    "code": [
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx"
+    ],
+    "code_by_language": {
+      "python": [
+        "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+        "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+        "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py"
+      ],
+      "typescript": [
+        "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx"
+      ]
+    },
+    "documentation": [
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\README.md",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/deployment-infrastructure\\README.md",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\README.md",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/README.md",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\README.md",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\requirements.txt",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/design-system\\README.md"
+    ],
+    "images": [],
+    "sketches": [],
+    "other": [
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\",
+      "/tmp/unzipped_8rvuzbwa/demo_capstone_project/deployment-infrastructure\\terraform\\main.tf"
+    ]
+  },
+  "projects": {
+    "demo_capstone_project": {
+      "project_name": "demo_capstone_project",
+      "project_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project",
+      "is_git_repo": false,
+      "git_analysis": null,
+      "categorized_contents": {
+        "code": [
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx"
+        ],
+        "code_by_language": {
+          "python": [
+            "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+            "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+            "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py"
+          ],
+          "typescript": [
+            "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx"
+          ]
+        },
+        "documentation": [
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\README.md",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/deployment-infrastructure\\README.md",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\README.md",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/README.md",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\README.md",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\requirements.txt",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/design-system\\README.md"
+        ],
+        "images": [],
+        "sketches": [],
+        "other": [
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\",
+          "/tmp/unzipped_8rvuzbwa/demo_capstone_project/deployment-infrastructure\\terraform\\main.tf"
+        ]
+      },
+      "analysis_results": {
+        "documentation": {
+          "files": [
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\README.md",
+              "file_name": "ml-recommendation-engine\\README.md",
+              "file_type": "txt",
+              "file_size_bytes": 1618,
+              "created_time": "2026-01-28T17:41:20.712950",
+              "modified_time": "2026-01-28T17:41:20.712950",
+              "page_count": null,
+              "word_count": 180,
+              "sentence_count": 19,
+              "paragraph_count": 17,
+              "character_count": 1366,
+              "estimated_reading_time_minutes": 0.9,
+              "lexical_diversity": 0.7556,
+              "avg_word_length": 7.59,
+              "avg_sentence_length": 9.47,
+              "top_keywords": [
+                [
+                  "python",
+                  4
+                ],
+                [
+                  "accuracy",
+                  4
+                ],
+                [
+                  "https",
+                  3
+                ],
+                [
+                  "img",
+                  3
+                ],
+                [
+                  "shields",
+                  3
+                ],
+                [
+                  "badge",
+                  3
+                ],
+                [
+                  "tensorflow",
+                  3
+                ],
+                [
+                  "model",
+                  3
+                ],
+                [
+                  "recommendations",
+                  3
+                ],
+                [
+                  "filtering",
+                  3
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/deployment-infrastructure\\README.md",
+              "file_name": "deployment-infrastructure\\README.md",
+              "file_type": "txt",
+              "file_size_bytes": 589,
+              "created_time": "2026-01-28T17:41:20.712950",
+              "modified_time": "2026-01-28T17:41:20.712950",
+              "page_count": null,
+              "word_count": 74,
+              "sentence_count": 3,
+              "paragraph_count": 8,
+              "character_count": 486,
+              "estimated_reading_time_minutes": 0.37,
+              "lexical_diversity": 0.7973,
+              "avg_word_length": 6.57,
+              "avg_sentence_length": 24.67,
+              "top_keywords": [
+                [
+                  "infrastructure",
+                  4
+                ],
+                [
+                  "deployment",
+                  2
+                ],
+                [
+                  "aws",
+                  2
+                ],
+                [
+                  "monitoring",
+                  2
+                ],
+                [
+                  "code",
+                  1
+                ],
+                [
+                  "deploying",
+                  1
+                ],
+                [
+                  "commerce",
+                  1
+                ],
+                [
+                  "platform",
+                  1
+                ],
+                [
+                  "features",
+                  1
+                ],
+                [
+                  "terraform",
+                  1
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\README.md",
+              "file_name": "ecommerce-backend\\README.md",
+              "file_type": "txt",
+              "file_size_bytes": 2780,
+              "created_time": "2026-01-28T17:41:20.713950",
+              "modified_time": "2026-01-28T17:41:20.713950",
+              "page_count": null,
+              "word_count": 308,
+              "sentence_count": 21,
+              "paragraph_count": 23,
+              "character_count": 2260,
+              "estimated_reading_time_minutes": 1.54,
+              "lexical_diversity": 0.6818,
+              "avg_word_length": 7.34,
+              "avg_sentence_length": 14.67,
+              "top_keywords": [
+                [
+                  "api",
+                  12
+                ],
+                [
+                  "django",
+                  6
+                ],
+                [
+                  "https",
+                  4
+                ],
+                [
+                  "img",
+                  4
+                ],
+                [
+                  "shields",
+                  4
+                ],
+                [
+                  "badge",
+                  4
+                ],
+                [
+                  "coverage",
+                  4
+                ],
+                [
+                  "python",
+                  4
+                ],
+                [
+                  "rest",
+                  4
+                ],
+                [
+                  "authentication",
+                  4
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/README.md",
+              "file_name": "README.md",
+              "file_type": "txt",
+              "file_size_bytes": 3752,
+              "created_time": "2026-01-28T17:41:20.712950",
+              "modified_time": "2026-01-28T17:41:20.712950",
+              "page_count": null,
+              "word_count": 470,
+              "sentence_count": 23,
+              "paragraph_count": 20,
+              "character_count": 3076,
+              "estimated_reading_time_minutes": 2.35,
+              "lexical_diversity": 0.5723,
+              "avg_word_length": 6.54,
+              "avg_sentence_length": 20.43,
+              "top_keywords": [
+                [
+                  "python",
+                  15
+                ],
+                [
+                  "src",
+                  7
+                ],
+                [
+                  "pipeline",
+                  7
+                ],
+                [
+                  "project",
+                  6
+                ],
+                [
+                  "django",
+                  6
+                ],
+                [
+                  "evidence",
+                  6
+                ],
+                [
+                  "design",
+                  6
+                ],
+                [
+                  "projects",
+                  5
+                ],
+                [
+                  "type",
+                  5
+                ],
+                [
+                  "highlights",
+                  5
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\README.md",
+              "file_name": "mobile-shopping-app\\README.md",
+              "file_type": "txt",
+              "file_size_bytes": 1661,
+              "created_time": "2026-01-28T17:41:20.711950",
+              "modified_time": "2026-01-28T17:41:20.711950",
+              "page_count": null,
+              "word_count": 204,
+              "sentence_count": 17,
+              "paragraph_count": 17,
+              "character_count": 1380,
+              "estimated_reading_time_minutes": 1.02,
+              "lexical_diversity": 0.7059,
+              "avg_word_length": 6.76,
+              "avg_sentence_length": 12.0,
+              "top_keywords": [
+                [
+                  "react",
+                  8
+                ],
+                [
+                  "native",
+                  6
+                ],
+                [
+                  "typescript",
+                  4
+                ],
+                [
+                  "mobile",
+                  3
+                ],
+                [
+                  "app",
+                  3
+                ],
+                [
+                  "https",
+                  3
+                ],
+                [
+                  "img",
+                  3
+                ],
+                [
+                  "shields",
+                  3
+                ],
+                [
+                  "badge",
+                  3
+                ],
+                [
+                  "order",
+                  3
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\requirements.txt",
+              "file_name": "ecommerce-backend\\requirements.txt",
+              "file_type": "txt",
+              "file_size_bytes": 501,
+              "created_time": "2026-01-28T17:41:20.712950",
+              "modified_time": "2026-01-28T17:41:20.712950",
+              "page_count": null,
+              "word_count": 30,
+              "sentence_count": 45,
+              "paragraph_count": 4,
+              "character_count": 439,
+              "estimated_reading_time_minutes": 0.15,
+              "lexical_diversity": 0.9333,
+              "avg_word_length": 14.63,
+              "avg_sentence_length": 0.67,
+              "top_keywords": [
+                [
+                  "django",
+                  4
+                ],
+                [
+                  "pytest",
+                  3
+                ],
+                [
+                  "djangorestframework",
+                  2
+                ],
+                [
+                  "mkdocs",
+                  2
+                ],
+                [
+                  "simplejwt",
+                  1
+                ],
+                [
+                  "drf",
+                  1
+                ],
+                [
+                  "spectacular",
+                  1
+                ],
+                [
+                  "binary",
+                  1
+                ],
+                [
+                  "redis",
+                  1
+                ],
+                [
+                  "celery",
+                  1
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/design-system\\README.md",
+              "file_name": "design-system\\README.md",
+              "file_type": "txt",
+              "file_size_bytes": 496,
+              "created_time": "2026-01-28T17:41:20.712950",
+              "modified_time": "2026-01-28T17:41:20.712950",
+              "page_count": null,
+              "word_count": 69,
+              "sentence_count": 2,
+              "paragraph_count": 8,
+              "character_count": 397,
+              "estimated_reading_time_minutes": 0.34,
+              "lexical_diversity": 0.7101,
+              "avg_word_length": 5.75,
+              "avg_sentence_length": 34.5,
+              "top_keywords": [
+                [
+                  "design",
+                  3
+                ],
+                [
+                  "components",
+                  3
+                ],
+                [
+                  "system",
+                  2
+                ],
+                [
+                  "documentation",
+                  2
+                ],
+                [
+                  "guidelines",
+                  2
+                ],
+                [
+                  "brand",
+                  1
+                ],
+                [
+                  "specifications",
+                  1
+                ],
+                [
+                  "commerce",
+                  1
+                ],
+                [
+                  "platform",
+                  1
+                ],
+                [
+                  "color",
+                  1
+                ]
+              ],
+              "heading_count": null,
+              "heading_breakdown": null
+            }
+          ],
+          "totals": {
+            "total_files": 7,
+            "total_words": 1335,
+            "total_sentences": 130,
+            "total_paragraphs": 97,
+            "total_characters": 9404,
+            "total_size_bytes": 11397,
+            "total_pages": null,
+            "total_reading_time_minutes": 6.67,
+            "avg_words_per_file": 190.71,
+            "avg_lexical_diversity": 0.7366,
+            "file_types": {
+              "pdf": 0,
+              "docx": 0,
+              "txt": 7
+            },
+            "top_keywords_overall": [
+              [
+                "python",
+                23
+              ],
+              [
+                "django",
+                16
+              ],
+              [
+                "api",
+                12
+              ],
+              [
+                "https",
+                10
+              ],
+              [
+                "img",
+                10
+              ],
+              [
+                "shields",
+                10
+              ],
+              [
+                "badge",
+                10
+              ],
+              [
+                "design",
+                9
+              ],
+              [
+                "react",
+                8
+              ],
+              [
+                "src",
+                7
+              ],
+              [
+                "pipeline",
+                7
+              ],
+              [
+                "project",
+                6
+              ],
+              [
+                "evidence",
+                6
+              ],
+              [
+                "native",
+                6
+              ],
+              [
+                "projects",
+                5
+              ]
+            ]
+          }
+        },
+        "images": null,
+        "code": {
+          "files": [
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+              "language": "python",
+              "frameworks": [
+                "django"
+              ],
+              "skills": [
+                "object-oriented-programming",
+                "python",
+                "django"
+              ],
+              "lines_of_code": 157,
+              "file_type": "code"
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+              "language": "python",
+              "frameworks": [
+                "pandas",
+                "numpy"
+              ],
+              "skills": [
+                "object-oriented-programming",
+                "numpy",
+                "python",
+                "pandas"
+              ],
+              "lines_of_code": 211,
+              "file_type": "code"
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py",
+              "language": "python",
+              "frameworks": [
+                "django",
+                "pytest"
+              ],
+              "skills": [
+                "object-oriented-programming",
+                "python",
+                "pytest",
+                "django"
+              ],
+              "lines_of_code": 154,
+              "file_type": "test"
+            },
+            {
+              "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx",
+              "language": "javascript",
+              "frameworks": [
+                "react"
+              ],
+              "skills": [
+                "javascript",
+                "react",
+                "arrow-functions"
+              ],
+              "lines_of_code": 159,
+              "file_type": "code"
+            }
+          ],
+          "metrics": {
+            "total_files": 4,
+            "total_lines": 681,
+            "languages": [
+              "javascript",
+              "python"
+            ],
+            "frameworks": [
+              "django",
+              "numpy",
+              "pandas",
+              "pytest",
+              "react"
+            ],
+            "skills": [
+              "arrow-functions",
+              "django",
+              "javascript",
+              "numpy",
+              "object-oriented-programming",
+              "pandas",
+              "pytest",
+              "python",
+              "react"
+            ],
+            "code_files": 3,
+            "test_files": 1
+          },
+          "skill_analysis": {
+            "per_file": [
+              {
+                "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+                "language": "python",
+                "basic_skills": [
+                  "python"
+                ],
+                "advanced_skills": [
+                  "time-complexity-analysis",
+                  "function-purity"
+                ],
+                "design_patterns": [
+                  "oop-structure",
+                  "inheritance-pattern"
+                ],
+                "skill_categories": {
+                  "performance": [
+                    "time-complexity-analysis"
+                  ],
+                  "code-quality": [
+                    "function-purity"
+                  ],
+                  "architecture": [
+                    "inheritance-pattern",
+                    "oop-structure"
+                  ]
+                },
+                "complexity_insights": {
+                  "max_loop_nesting": 0,
+                  "cyclomatic_estimate": 7,
+                  "return_count": 9,
+                  "methods_per_class_mean": 3.0,
+                  "largest_class_methods": 7,
+                  "overall_complexity": "low"
+                },
+                "evidence": [
+                  {
+                    "skill": "oop-structure",
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class Category"
+                  },
+                  {
+                    "skill": "inheritance-pattern",
+                    "type": "pattern",
+                    "reasoning": "Class inherits from another base class",
+                    "location": "class Category"
+                  },
+                  {
+                    "skill": "function-purity",
+                    "type": "pattern",
+                    "reasoning": "Function appears pure with return-only behavior",
+                    "location": "function __str__"
+                  },
+                  {
+                    "skill": "time-complexity-analysis",
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  }
+                ]
+              },
+              {
+                "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+                "language": "python",
+                "basic_skills": [
+                  "python"
+                ],
+                "advanced_skills": [
+                  "lazy-initialization",
+                  "time-complexity-analysis",
+                  "static-type-checking",
+                  "pythonic-idioms",
+                  "functional-constructs"
+                ],
+                "design_patterns": [
+                  "oop-structure",
+                  "encapsulation-principle",
+                  "coupling-cohesion"
+                ],
+                "skill_categories": {
+                  "architecture": [
+                    "coupling-cohesion",
+                    "encapsulation-principle",
+                    "lazy-initialization",
+                    "oop-structure"
+                  ],
+                  "performance": [
+                    "time-complexity-analysis"
+                  ],
+                  "code-quality": [
+                    "pythonic-idioms",
+                    "static-type-checking"
+                  ],
+                  "language-feature": [
+                    "functional-constructs"
+                  ]
+                },
+                "complexity_insights": {
+                  "max_loop_nesting": 2,
+                  "cyclomatic_estimate": 5,
+                  "return_count": 6,
+                  "methods_per_class_mean": 7.0,
+                  "largest_class_methods": 7,
+                  "overall_complexity": "low"
+                },
+                "evidence": [
+                  {
+                    "skill": "lazy-initialization",
+                    "type": "pattern",
+                    "reasoning": "Detected lazy initialization pattern with None check",
+                    "location": "  196 |             Array of prediction scores\n  197 |         \"\"\"\n→ 198 |         if self.model is None:\n  199 |             raise ValueError(\"Model not trained. Call fit() first.\")\n  200 |         "
+                  },
+                  {
+                    "skill": "static-type-checking",
+                    "type": "annotation",
+                    "reasoning": "Comprehensive type hints enable static analysis and IDE support",
+                    "location": "17 parameters, 6 returns"
+                  },
+                  {
+                    "skill": "pythonic-idioms",
+                    "type": "syntax",
+                    "reasoning": "Uses comprehensions for concise, efficient iteration",
+                    "location": "5 comprehensions"
+                  },
+                  {
+                    "skill": "oop-structure",
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class HybridRecommender"
+                  },
+                  {
+                    "skill": "encapsulation-principle",
+                    "type": "pattern",
+                    "reasoning": "Prefixed attributes indicate encapsulation practices",
+                    "location": "attribute _prepare_training_data"
+                  },
+                  {
+                    "skill": "functional-constructs",
+                    "type": "pattern",
+                    "reasoning": "Functional construct (comprehension or lambda) detected",
+                    "location": "functional construct usage"
+                  },
+                  {
+                    "skill": "coupling-cohesion",
+                    "type": "pattern",
+                    "reasoning": "High number of imports suggests coupling considerations",
+                    "location": "import section"
+                  },
+                  {
+                    "skill": "time-complexity-analysis",
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 2; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  }
+                ]
+              },
+              {
+                "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py",
+                "language": "python",
+                "basic_skills": [
+                  "python"
+                ],
+                "advanced_skills": [
+                  "time-complexity-analysis",
+                  "function-purity",
+                  "functional-constructs"
+                ],
+                "design_patterns": [
+                  "oop-structure",
+                  "coupling-cohesion"
+                ],
+                "skill_categories": {
+                  "performance": [
+                    "time-complexity-analysis"
+                  ],
+                  "code-quality": [
+                    "function-purity"
+                  ],
+                  "language-feature": [
+                    "functional-constructs"
+                  ],
+                  "architecture": [
+                    "coupling-cohesion",
+                    "oop-structure"
+                  ]
+                },
+                "complexity_insights": {
+                  "max_loop_nesting": 0,
+                  "return_count": 4,
+                  "methods_per_class_mean": 3.25,
+                  "largest_class_methods": 4,
+                  "overall_complexity": "low"
+                },
+                "evidence": [
+                  {
+                    "skill": "oop-structure",
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class TestProductListAPI"
+                  },
+                  {
+                    "skill": "function-purity",
+                    "type": "pattern",
+                    "reasoning": "Function appears pure with return-only behavior",
+                    "location": "function api_client"
+                  },
+                  {
+                    "skill": "functional-constructs",
+                    "type": "pattern",
+                    "reasoning": "Functional helper (map/filter/reduce) detected",
+                    "location": "functional helper usage"
+                  },
+                  {
+                    "skill": "coupling-cohesion",
+                    "type": "pattern",
+                    "reasoning": "High number of imports suggests coupling considerations",
+                    "location": "import section"
+                  },
+                  {
+                    "skill": "time-complexity-analysis",
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  }
+                ]
+              },
+              {
+                "file_path": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx",
+                "language": "typescript",
+                "basic_skills": [
+                  "typescript"
+                ],
+                "advanced_skills": [
+                  "time-complexity-analysis",
+                  "typescript-interface",
+                  "typescript-generic",
+                  "functional-constructs"
+                ],
+                "design_patterns": [
+                  "abstraction-principle",
+                  "inheritance-pattern",
+                  "coupling-cohesion"
+                ],
+                "skill_categories": {
+                  "performance": [
+                    "time-complexity-analysis"
+                  ],
+                  "language-feature": [
+                    "functional-constructs",
+                    "typescript-generic",
+                    "typescript-interface"
+                  ],
+                  "architecture": [
+                    "abstraction-principle",
+                    "coupling-cohesion",
+                    "inheritance-pattern"
+                  ]
+                },
+                "complexity_insights": {
+                  "max_loop_nesting": 0,
+                  "recursion": true,
+                  "cyclomatic_estimate": 6,
+                  "return_count": 5,
+                  "overall_complexity": "moderate"
+                },
+                "evidence": [
+                  {
+                    "skill": "typescript-interface",
+                    "type": "syntax",
+                    "reasoning": "Interfaces define TypeScript contracts",
+                    "location": "    6 | import { Product } from '../types';\n    7 | \n→   8 | interface ProductListProps {\n    9 |   searchQuery?: string;\n   10 |   category?: string;"
+                  },
+                  {
+                    "skill": "typescript-generic",
+                    "type": "syntax",
+                    "reasoning": "Generic declarations highlight reusable components",
+                    "location": "   11 | }\n   12 | \n→  13 | export const ProductList: React.FC<ProductListProps> = ({ searchQuery, category }) => {\n   14 |   const dispatch = useDispatch();\n   15 |   const { products, loading, error } = useSelector((state: RootState) => state.products);"
+                  },
+                  {
+                    "skill": "abstraction-principle",
+                    "type": "pattern",
+                    "reasoning": "Abstract class or interface detected",
+                    "location": "abstract/interface declaration"
+                  },
+                  {
+                    "skill": "inheritance-pattern",
+                    "type": "pattern",
+                    "reasoning": "Inheritance hierarchy detected",
+                    "location": "inheritance clause"
+                  },
+                  {
+                    "skill": "functional-constructs",
+                    "type": "pattern",
+                    "reasoning": "Functional helper detected",
+                    "location": "functional helper usage"
+                  },
+                  {
+                    "skill": "coupling-cohesion",
+                    "type": "pattern",
+                    "reasoning": "Multiple imports suggest coupling considerations",
+                    "location": "import block"
+                  },
+                  {
+                    "skill": "time-complexity-analysis",
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=True; algorithms=False",
+                    "location": "complexity scan"
+                  }
+                ]
+              }
+            ],
+            "aggregate": {
+              "basic_skills": [
+                "python",
+                "typescript"
+              ],
+              "advanced_skills": [
+                "function-purity",
+                "functional-constructs",
+                "lazy-initialization",
+                "pythonic-idioms",
+                "static-type-checking",
+                "time-complexity-analysis",
+                "typescript-generic",
+                "typescript-interface"
+              ],
+              "design_patterns": [
+                "abstraction-principle",
+                "coupling-cohesion",
+                "encapsulation-principle",
+                "inheritance-pattern",
+                "oop-structure"
+              ],
+              "evidence_count": 24,
+              "evidence_by_skill": {
+                "oop-structure": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class Category"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class HybridRecommender"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Class with methods detected indicating object-oriented structure",
+                    "location": "class TestProductListAPI"
+                  }
+                ],
+                "inheritance-pattern": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Class inherits from another base class",
+                    "location": "class Category"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Inheritance hierarchy detected",
+                    "location": "inheritance clause"
+                  }
+                ],
+                "function-purity": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Function appears pure with return-only behavior",
+                    "location": "function __str__"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Function appears pure with return-only behavior",
+                    "location": "function api_client"
+                  }
+                ],
+                "time-complexity-analysis": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 2; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=False; algorithms=False",
+                    "location": "complexity scan"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Detected nested loops up to depth 0; recursion=True; algorithms=False",
+                    "location": "complexity scan"
+                  }
+                ],
+                "lazy-initialization": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Detected lazy initialization pattern with None check",
+                    "location": "  196 |             Array of prediction scores\n  197 |         \"\"\"\n→ 198 |         if self.model is None:\n  199 |             raise ValueError(\"Model not trained. Call fit() first.\")\n  200 |         "
+                  }
+                ],
+                "static-type-checking": [
+                  {
+                    "type": "annotation",
+                    "reasoning": "Comprehensive type hints enable static analysis and IDE support",
+                    "location": "17 parameters, 6 returns"
+                  }
+                ],
+                "pythonic-idioms": [
+                  {
+                    "type": "syntax",
+                    "reasoning": "Uses comprehensions for concise, efficient iteration",
+                    "location": "5 comprehensions"
+                  }
+                ],
+                "encapsulation-principle": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Prefixed attributes indicate encapsulation practices",
+                    "location": "attribute _prepare_training_data"
+                  }
+                ],
+                "functional-constructs": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Functional construct (comprehension or lambda) detected",
+                    "location": "functional construct usage"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Functional helper (map/filter/reduce) detected",
+                    "location": "functional helper usage"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Functional helper detected",
+                    "location": "functional helper usage"
+                  }
+                ],
+                "coupling-cohesion": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "High number of imports suggests coupling considerations",
+                    "location": "import section"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "High number of imports suggests coupling considerations",
+                    "location": "import section"
+                  },
+                  {
+                    "type": "pattern",
+                    "reasoning": "Multiple imports suggest coupling considerations",
+                    "location": "import block"
+                  }
+                ],
+                "typescript-interface": [
+                  {
+                    "type": "syntax",
+                    "reasoning": "Interfaces define TypeScript contracts",
+                    "location": "    6 | import { Product } from '../types';\n    7 | \n→   8 | interface ProductListProps {\n    9 |   searchQuery?: string;\n   10 |   category?: string;"
+                  }
+                ],
+                "typescript-generic": [
+                  {
+                    "type": "syntax",
+                    "reasoning": "Generic declarations highlight reusable components",
+                    "location": "   11 | }\n   12 | \n→  13 | export const ProductList: React.FC<ProductListProps> = ({ searchQuery, category }) => {\n   14 |   const dispatch = useDispatch();\n   15 |   const { products, loading, error } = useSelector((state: RootState) => state.products);"
+                  }
+                ],
+                "abstraction-principle": [
+                  {
+                    "type": "pattern",
+                    "reasoning": "Abstract class or interface detected",
+                    "location": "abstract/interface declaration"
+                  }
+                ]
+              },
+              "total_files_analyzed": 4
+            }
+          }
+        },
+        "videos": null
+      },
+      "project_metrics": {
+        "languages": [
+          "javascript",
+          "python"
+        ],
+        "frameworks": [
+          "django",
+          "numpy",
+          "pandas",
+          "pytest",
+          "react"
+        ],
+        "skills": [
+          "arrow-functions",
+          "django",
+          "javascript",
+          "numpy",
+          "object-oriented-programming",
+          "pandas",
+          "pytest",
+          "python",
+          "react"
+        ],
+        "total_files": 4,
+        "total_lines": 681,
+        "total_commits": 0,
+        "total_contributors": 0,
+        "is_collaborative": false,
+        "doc_files": 7,
+        "doc_words": 1335,
+        "image_files": 0,
+        "video_files": 0,
+        "test_files": 1,
+        "has_documentation": true,
+        "has_images": false,
+        "has_videos": false,
+        "has_tests": true
+      },
+      "portfolio_item": {
+        "project_name": "demo_capstone_project",
+        "tagline": "Individual javascript and python project using django and numpy (tested)",
+        "description": "A comprehensive project comprising 4 source files and 681 lines of code. The project includes comprehensive test coverage, features extensive documentation.",
+        "languages": [
+          "javascript",
+          "python"
+        ],
+        "frameworks": [
+          "django",
+          "numpy",
+          "pandas",
+          "pytest",
+          "react"
+        ],
+        "skills": [
+          "arrow-functions",
+          "django",
+          "javascript",
+          "numpy",
+          "object-oriented-programming",
+          "pandas",
+          "pytest",
+          "python",
+          "react"
+        ],
+        "is_collaborative": false,
+        "total_commits": 0,
+        "total_lines": 681,
+        "project_type": "Web Application",
+        "complexity": "Low",
+        "key_features": [
+          "Comprehensive Testing",
+          "Well-Documented",
+          "Modern Stack"
+        ],
+        "has_documentation": true,
+        "has_tests": true
+      },
+      "resume_item": {
+        "project_name": "demo_capstone_project",
+        "bullets": [
+          "Engineered a javascript/python application using django and numpy with comprehensive test coverage.",
+          "Established comprehensive testing practices, ensuring code reliability and maintainability through automated test suites.",
+          "Applied expertise in arrow-functions, django, javascript, and numpy to deliver a well-documented solution, showcasing proficiency in modern software engineering practices."
+        ]
+      },
+      "success_metrics": {
+        "overall_score": 34.5,
+        "code_quality_score": 90.0,
+        "test_coverage_indicator": 0.0,
+        "documentation_score": 70.0,
+        "activity_score": 0.0,
+        "commit_frequency_score": 0.0,
+        "collaboration_score": 0.0,
+        "complexity_score": 40.0,
+        "scale_score": 20.0,
+        "badges": [],
+        "feedback_items": [],
+        "evaluation_notes": [],
+        "details": {
+          "code_quality": {
+            "score": 90.0,
+            "description": "Excellent"
+          },
+          "test_coverage": {
+            "estimated": 0.0,
+            "description": "No test files detected"
+          },
+          "documentation": {
+            "score": 70.0,
+            "description": "Good"
+          },
+          "activity": {
+            "score": 0.0,
+            "description": "Needs Improvement"
+          },
+          "collaboration": {
+            "score": 0.0,
+            "description": "No Git history available"
+          },
+          "complexity": {
+            "score": 40.0,
+            "description": "Small codebase (681 lines)"
+          },
+          "scale": {
+            "score": 20.0,
+            "description": "4 files"
+          }
+        }
+      }
+    }
+  },
+  "llm_summaries": {
+    "error": "LLM summarization unavailable: OpenAI API key not provided. Either pass it to the constructor or set the OPENAI_API_KEY environment variable."
+  },
+  "project_ranking": {
+    "ranked_projects": [
+      {
+        "rank": 1,
+        "name": "demo_capstone_project",
+        "score": 3.9838,
+        "is_collaborative": false,
+        "languages": [
+          "javascript",
+          "python"
+        ],
+        "frameworks": [
+          "django",
+          "numpy",
+          "pandas",
+          "pytest",
+          "react"
+        ],
+        "commits": 0,
+        "lines_of_code": 681,
+        "duration_days": 0
+      }
+    ],
+    "top_summaries": [
+      {
+        "rank": 1,
+        "id": "demo_capstone_project",
+        "name": "demo_capstone_project",
+        "score": 3.9838,
+        "criteria": "score",
+        "summary": "demo_capstone_project | Solo | score 3.9838. Top contributor: Individual contributor (100%). Impact: 681 LOC. Langs: javascript, python. Recency: 0 days.",
+        "metrics": {
+          "commits": 0,
+          "loc": 681,
+          "recency_days": 0,
+          "languages": [
+            "javascript",
+            "python"
+          ],
+          "duration_days": 0
+        }
+      }
+    ],
+    "total_projects_ranked": 1
+  },
+  "chronological_skills": {
+    "timeline": [
+      {
+        "file": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\test_api.py",
+        "timestamp": "2026-01-28T17:41:20.711950",
+        "category": "code",
+        "skills": [
+          "django",
+          "object-oriented-programming",
+          "pytest",
+          "python"
+        ],
+        "metadata": {
+          "language": "python",
+          "frameworks": [
+            "django",
+            "pytest"
+          ]
+        }
+      },
+      {
+        "file": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ml-recommendation-engine\\src\\hybrid_recommender.py",
+        "timestamp": "2026-01-28T17:41:20.712950",
+        "category": "code",
+        "skills": [
+          "numpy",
+          "object-oriented-programming",
+          "pandas",
+          "python"
+        ],
+        "metadata": {
+          "language": "python",
+          "frameworks": [
+            "pandas",
+            "numpy"
+          ]
+        }
+      },
+      {
+        "file": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/mobile-shopping-app\\src\\components\\ProductList.tsx",
+        "timestamp": "2026-01-28T17:41:20.712950",
+        "category": "code",
+        "skills": [
+          "arrow-functions",
+          "javascript",
+          "react"
+        ],
+        "metadata": {
+          "language": "javascript",
+          "frameworks": [
+            "react"
+          ]
+        }
+      },
+      {
+        "file": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\requirements.txt",
+        "timestamp": "2026-01-28T17:41:20.712950",
+        "category": "text",
+        "skills": [
+          "writing"
+        ],
+        "metadata": {
+          "word_count": 30,
+          "lexical_diversity": 0.9333,
+          "avg_word_length": 14.63
+        }
+      },
+      {
+        "file": "/tmp/unzipped_8rvuzbwa/demo_capstone_project/ecommerce-backend\\products\\models.py",
+        "timestamp": "2026-01-28T17:41:20.713950",
+        "category": "code",
+        "skills": [
+          "django",
+          "object-oriented-programming",
+          "python"
+        ],
+        "metadata": {
+          "language": "python",
+          "frameworks": [
+            "django"
+          ]
+        }
+      }
+    ],
+    "total_events": 5,
+    "categories": [
+      "code",
+      "text"
+    ]
+  }
+}
