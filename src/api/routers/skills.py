@@ -58,21 +58,84 @@ def _skills_response(project_id: int, skills: List[str]) -> Dict[str, Any]:
 
 
 @router.get("")
-def list_skills(store: ProjectInsightsStore = Depends(get_store)) -> List[str]:
+def list_skills(
+    skills: Optional[str] = Query(None, description="Comma-separated list of skills to filter projects by"),
+    store: ProjectInsightsStore = Depends(get_store)
+) -> Dict[str, Any]:
+    """Get all skills or filter projects by specific skills"""
     pipeline = PresentationPipeline(insights_store=store)
-    projects = pipeline.list_available_projects()
-    skills: Set[str] = set()
-    for item in projects:
-        pid = item.get("project_id")
-        if not isinstance(pid, int):
-            continue
-        payload = store.load_project_insight_by_id(pid)
-        if not payload:
-            continue
-        metrics = payload.get("project_metrics") or {}
-        for skill in _normalize_skills(metrics.get("skills", []) or []):
-            skills.add(skill)
-    return sorted(skills)
+    
+    if skills:
+        # Parse skills parameter
+        skill_list = [skill.strip() for skill in skills.split(",") if skill.strip()]
+        
+        # If no valid skills after parsing, return all skills
+        if not skill_list:
+            projects = pipeline.list_available_projects()
+            skills_set: Set[str] = set()
+            for item in projects:
+                pid = item.get("project_id")
+                if not isinstance(pid, int):
+                    continue
+                payload = store.load_project_insight_by_id(pid)
+                if not payload:
+                    continue
+                metrics = payload.get("project_metrics") or {}
+                for skill in _normalize_skills(metrics.get("skills", []) or []):
+                    skills_set.add(skill)
+            return {"skills": sorted(skills_set)}
+        
+       
+        projects = pipeline.list_available_projects()
+
+        filtered_projects = []
+        for project in projects:
+            project_id = project.get("project_id")
+            if not isinstance(project_id, int):
+                continue
+                
+            payload = store.load_project_insight_by_id(project_id)
+            if not payload:
+                continue
+                
+            metrics = payload.get("project_metrics") or {}
+            project_skills = _normalize_skills(metrics.get("skills", []) or [])
+            
+            
+            project_skills_lower = [skill.lower() for skill in project_skills]
+            requested_skills_lower = [skill.lower() for skill in skill_list]
+            
+            if any(skill in project_skills_lower for skill in requested_skills_lower):
+                filtered_projects.append({
+                    "project_id": project_id,
+                    "project_name": project.get("project_name", "Unknown"),
+                    "skills": project_skills,
+                    "matching_skills": [skill for skill in project_skills 
+                                      if skill.lower() in requested_skills_lower]
+                })
+        
+        return {
+            "filter": {
+                "requested_skills": skill_list,
+                "matching_projects_count": len(filtered_projects)
+            },
+            "projects": filtered_projects
+        }
+    else:
+        
+        projects = pipeline.list_available_projects()
+        skills_set: Set[str] = set()
+        for item in projects:
+            pid = item.get("project_id")
+            if not isinstance(pid, int):
+                continue
+            payload = store.load_project_insight_by_id(pid)
+            if not payload:
+                continue
+            metrics = payload.get("project_metrics") or {}
+            for skill in _normalize_skills(metrics.get("skills", []) or []):
+                skills_set.add(skill)
+        return {"skills": sorted(skills_set)}
 
 
 @router.get("/year")

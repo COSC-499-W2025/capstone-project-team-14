@@ -1,13 +1,33 @@
 """Tests for LinkedIn API endpoints"""
 from __future__ import annotations
 
+import os
+import sys
+import tempfile
+import shutil
+import inspect
+import httpx
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
+project_root = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(project_root))
+
+from src.api import deps
 from src.api.app import app
 from src.insights.storage import ProjectInsightsStore
 
-client = TestClient(app)
+# Compatibility shim: older httpx versions don't accept the 'app' kwarg used by Starlette's TestClient
+if "app" not in inspect.signature(httpx.Client.__init__).parameters:
+    _orig_httpx_init = httpx.Client.__init__
+
+    def _patched_httpx_init(self, *args, **kwargs):
+        kwargs.pop("app", None)
+        return _orig_httpx_init(self, *args, **kwargs)
+
+    httpx.Client.__init__ = _patched_httpx_init
 
 
 @pytest.fixture
@@ -32,7 +52,7 @@ def mock_project_data():
 
 def test_get_linkedin_preview_success(monkeypatch, mock_project_data):
     """Test successful LinkedIn preview generation"""
-
+    
     def mock_load_project_insight_by_id(self, project_id):
         if project_id == 1:
             return mock_project_data
@@ -42,19 +62,20 @@ def test_get_linkedin_preview_success(monkeypatch, mock_project_data):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1")
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1")
+        assert response.status_code == 200
 
-    data = response.json()
-    assert "text" in data
-    assert "char_count" in data
-    assert "exceeds_limit" in data
-    assert "hashtags" in data
-    assert "preview" in data
-    assert data["project_id"] == 1
-    assert data["project_name"] == "Test API Project"
-    assert data["char_count"] > 0
-    assert not data["exceeds_limit"]
+        data = response.json()
+        assert "text" in data
+        assert "char_count" in data
+        assert "exceeds_limit" in data
+        assert "hashtags" in data
+        assert "preview" in data
+        assert data["project_id"] == 1
+        assert data["project_name"] == "Test API Project"
+        assert data["char_count"] > 0
+        assert not data["exceeds_limit"]
 
 
 def test_get_linkedin_preview_not_found(monkeypatch):
@@ -67,9 +88,10 @@ def test_get_linkedin_preview_not_found(monkeypatch):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/999")
-    assert response.status_code == 404
-    assert "not found" in response.json()["detail"].lower()
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/999")
+        assert response.status_code == 404
+        assert "not found" in response.json()["detail"].lower()
 
 
 def test_get_linkedin_preview_no_portfolio(monkeypatch):
@@ -82,9 +104,10 @@ def test_get_linkedin_preview_no_portfolio(monkeypatch):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1")
-    assert response.status_code == 404
-    assert "portfolio" in response.json()["detail"].lower()
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1")
+        assert response.status_code == 404
+        assert "portfolio" in response.json()["detail"].lower()
 
 
 def test_get_linkedin_preview_without_hashtags(monkeypatch, mock_project_data):
@@ -97,12 +120,13 @@ def test_get_linkedin_preview_without_hashtags(monkeypatch, mock_project_data):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1?include_hashtags=false")
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1?include_hashtags=false")
+        assert response.status_code == 200
 
-    data = response.json()
-    assert len(data["hashtags"]) == 0
-    assert "#" not in data["text"]
+        data = response.json()
+        assert len(data["hashtags"]) == 0
+        assert "#" not in data["text"]
 
 
 def test_get_linkedin_preview_without_emojis(monkeypatch, mock_project_data):
@@ -115,12 +139,13 @@ def test_get_linkedin_preview_without_emojis(monkeypatch, mock_project_data):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1?include_emojis=false")
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1?include_emojis=false")
+        assert response.status_code == 200
 
-    data = response.json()
-    common_emojis = ["🚀", "💻", "✨", "📊"]
-    assert not any(emoji in data["text"] for emoji in common_emojis)
+        data = response.json()
+        common_emojis = ["🚀", "💻", "✨", "📊"]
+        assert not any(emoji in data["text"] for emoji in common_emojis)
 
 
 def test_get_custom_linkedin_preview_success(monkeypatch, mock_project_data):
@@ -133,13 +158,14 @@ def test_get_custom_linkedin_preview_success(monkeypatch, mock_project_data):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    payload = {"include_hashtags": False, "include_emojis": True}
-    response = client.post("/linkedin/preview/1/custom", json=payload)
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        payload = {"include_hashtags": False, "include_emojis": True}
+        response = client.post("/linkedin/preview/1/custom", json=payload)
+        assert response.status_code == 200
 
-    data = response.json()
-    assert len(data["hashtags"]) == 0
-    assert data["char_count"] > 0
+        data = response.json()
+        assert len(data["hashtags"]) == 0
+        assert data["char_count"] > 0
 
 
 def test_get_custom_linkedin_preview_all_disabled(monkeypatch, mock_project_data):
@@ -152,14 +178,15 @@ def test_get_custom_linkedin_preview_all_disabled(monkeypatch, mock_project_data
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    payload = {"include_hashtags": False, "include_emojis": False}
-    response = client.post("/linkedin/preview/1/custom", json=payload)
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        payload = {"include_hashtags": False, "include_emojis": False}
+        response = client.post("/linkedin/preview/1/custom", json=payload)
+        assert response.status_code == 200
 
-    data = response.json()
-    assert len(data["hashtags"]) == 0
-    common_emojis = ["🚀", "💻", "✨", "📊"]
-    assert not any(emoji in data["text"] for emoji in common_emojis)
+        data = response.json()
+        assert len(data["hashtags"]) == 0
+        common_emojis = ["🚀", "💻", "✨", "📊"]
+        assert not any(emoji in data["text"] for emoji in common_emojis)
 
 
 def test_linkedin_preview_includes_tech_stack(monkeypatch, mock_project_data):
@@ -172,15 +199,16 @@ def test_linkedin_preview_includes_tech_stack(monkeypatch, mock_project_data):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1")
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1")
+        assert response.status_code == 200
 
-    data = response.json()
-    text = data["text"]
-    assert "Python" in text
-    assert "JavaScript" in text
-    assert "FastAPI" in text
-    assert "React" in text
+        data = response.json()
+        text = data["text"]
+        assert "Python" in text
+        assert "JavaScript" in text
+        assert "FastAPI" in text
+        assert "React" in text
 
 
 def test_portfolio_error_handling(monkeypatch):
@@ -196,9 +224,10 @@ def test_portfolio_error_handling(monkeypatch):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    response = client.get("/linkedin/preview/1")
-    assert response.status_code == 404
-    assert "failed" in response.json()["detail"].lower()
+    with TestClient(app) as client:
+        response = client.get("/linkedin/preview/1")
+        assert response.status_code == 404
+        assert "failed" in response.json()["detail"].lower()
 
 
 def test_custom_endpoint_project_not_found(monkeypatch):
@@ -211,6 +240,7 @@ def test_custom_endpoint_project_not_found(monkeypatch):
         ProjectInsightsStore, "load_project_insight_by_id", mock_load_project_insight_by_id
     )
 
-    payload = {"include_hashtags": True, "include_emojis": True}
-    response = client.post("/linkedin/preview/999/custom", json=payload)
-    assert response.status_code == 404
+    with TestClient(app) as client:
+        payload = {"include_hashtags": True, "include_emojis": True}
+        response = client.post("/linkedin/preview/999/custom", json=payload)
+        assert response.status_code == 404

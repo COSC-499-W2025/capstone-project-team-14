@@ -46,12 +46,41 @@ def test_skills_and_resume_endpoints():
         app.dependency_overrides[deps.get_store] = lambda: store
         client = TestClient(app)
 
-        # GET /skills
+        # GET /skills (original behavior - all skills)
         resp = client.get("/skills")
         assert resp.status_code == 200
-        skills = resp.json()
+        skills_response = resp.json()
+        assert "skills" in skills_response
+        skills = skills_response["skills"]
         assert isinstance(skills, list)
         assert all(isinstance(s, str) for s in skills)
+
+        # GET /skills with filtering (new functionality)
+        resp = client.get("/skills?skills=python")
+        assert resp.status_code == 200
+        filtered = resp.json()
+        assert "filter" in filtered
+        assert "projects" in filtered
+        assert filtered["filter"]["requested_skills"] == ["python"]
+        assert isinstance(filtered["filter"]["matching_projects_count"], int)
+        assert isinstance(filtered["projects"], list)
+
+        # Test multiple skills filtering
+        resp = client.get("/skills?skills=python,java")
+        assert resp.status_code == 200
+        multi_filtered = resp.json()
+        assert multi_filtered["filter"]["requested_skills"] == ["python", "java"]
+        assert len(multi_filtered["projects"]) >= 0
+
+        # Verify project structure in filtered response
+        if multi_filtered["projects"]:
+            project = multi_filtered["projects"][0]
+            assert "project_id" in project
+            assert "project_name" in project
+            assert "skills" in project
+            assert "matching_skills" in project
+            assert isinstance(project["skills"], list)
+            assert isinstance(project["matching_skills"], list)
 
         # GET /resume/{id}
         resp = client.get(f"/resume/{project_id}")
@@ -95,6 +124,53 @@ def test_skills_and_resume_endpoints():
         assert updated_portfolio["tagline"] == "High-impact data project"
         assert updated_portfolio["is_collaborative"] is True
         assert updated_portfolio["key_features"] == ["P1", "P2"]
+    finally:
+        app.dependency_overrides.clear()
+        shutil.rmtree(td, ignore_errors=True)
+
+
+def test_skills_filtering_edge_cases():
+    """Test edge cases for skills filtering functionality"""
+    td = tempfile.mkdtemp()
+    try:
+        db_path = os.path.join(td, "app.db")
+        store, project_id = _seed_store(db_path)
+
+        app.dependency_overrides[deps.get_store] = lambda: store
+        client = TestClient(app)
+
+        # Test empty skills parameter
+        resp = client.get("/skills?skills=")
+        assert resp.status_code == 200
+        # Should return all skills when skills parameter is empty
+        assert isinstance(resp.json(), list)
+
+        # Test whitespace-only skills parameter
+        resp = client.get("/skills?skills=   ")
+        assert resp.status_code == 200
+        # Should return all skills when skills parameter is only whitespace
+        assert isinstance(resp.json(), list)
+
+        # Test non-existent skill
+        resp = client.get("/skills?skills=nonexistent_skill_xyz")
+        assert resp.status_code == 200
+        filtered = resp.json()
+        assert filtered["filter"]["requested_skills"] == ["nonexistent_skill_xyz"]
+        assert filtered["filter"]["matching_projects_count"] == 0
+        assert filtered["projects"] == []
+
+        # Test case-insensitive matching
+        resp = client.get("/skills?skills=PYTHON")
+        assert resp.status_code == 200
+        case_insensitive = resp.json()
+        assert case_insensitive["filter"]["requested_skills"] == ["PYTHON"]
+
+        # Test mixed case and whitespace
+        resp = client.get("/skills?skills= python , java ,  sql ")
+        assert resp.status_code == 200
+        mixed_case = resp.json()
+        assert mixed_case["filter"]["requested_skills"] == ["python", "java", "sql"]
+
     finally:
         app.dependency_overrides.clear()
         shutil.rmtree(td, ignore_errors=True)
