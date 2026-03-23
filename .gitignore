@@ -1,0 +1,25 @@
+.DS_Store
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+
+# Node / frontend dependencies and build output
+node_modules/
+.next/
+dist/
+build/
+
+# Local runtime and generated data
+uploads/
+reports/
+*.log
