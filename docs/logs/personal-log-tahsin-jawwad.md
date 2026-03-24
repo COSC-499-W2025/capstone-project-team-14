@@ -9,6 +9,7 @@
 - [T2 Week 6-8 Personal Logs](#term-2-week-6-8)
 - [T2 Week 9 Personal Logs](#term-2-week-9)
 - [T2 Week 10 Personal Logs](#term-2-week-10)
+- [T2 Week 11 Personal Logs](#term-2-week-11)
 
 **Term 1**
 
@@ -804,3 +805,48 @@ Building on last week's heatmap and top projects endpoints, this week focused on
 * Connect the Profile data to resume and portfolio generation (use `first_name`/`last_name` in generated output)
 * Add client-side email format validation to the Profile form
 * Begin work on remaining Milestone 3 frontend features
+
+## Term 2 Week 11
+### Date Range
+16th March 2026 - 22nd March 2026
+
+### Connection to Previous Week
+Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` APIs, this week wired that data into the **generated** Next.js portfolio (`portfolio-template`) when users run `POST /portfolio/generate-site`, so the Milestone 3 web portfolio shows an activity heatmap and a top-projects showcase without duplicating those UIs in the Electron app.
+
+### Type of Tasks Worked On
+![Tahsin Type of Tasks Term 2 Week 11](images/tahsin-t2-week-11.png)
+
+**Coding Tasks:**
+
+*Portfolio template (`portfolio-template/`):*
+* Extended `src/types/portfolio.ts` with optional `heatmap` and `showcase` on `DeveloperProfile`
+* Added `ActivityHeatmap` and `TopShowcase` client components; `page.tsx` renders them only when config data is present
+* Updated sample `src/config/portfolio.ts` with compact placeholder heatmap and showcase entries for local `npm run dev`
+
+*Backend (`src/api/routers/portfolio.py`):*
+* Added `_build_heatmap_data(store)` — reuses existing `_heatmap_from_timeline`, `_heatmap_from_range`, `_merge_heatmaps` to aggregate weekly activity across all stored projects
+* Added `_build_showcase_data(store, limit=3)` — reuses `_score_project`, `_build_key_metrics`, `_build_evolution` for top-N showcase payloads
+* Extended `_build_portfolio_ts()` to emit optional `heatmap` and `showcase` blocks in the generated `portfolio.ts`
+* `generate_portfolio_site` now attaches heatmap + showcase to the profile dict before writing the template config (failures are logged and omitted rather than blocking site generation)
+
+**Testing Tasks:**
+
+* Added `tests/api/test_portfolio_site_generation.py` (11 tests): heatmap/showcase builder shape and ordering, empty-store behaviour, and `_build_portfolio_ts` embedding for heatmap/showcase vs omission when absent
+* Confirmed related suites still pass: `test_heatmap.py`, `test_top_projects.py`
+
+**Other:**
+* Compressed new frontend/test LOC (comments/whitespace) to keep the feature bundle small while preserving behaviour
+
+### Task from Project Board
+* Milestone 3: web portfolio — activity heatmap and top-project showcase in generated site (aligned with course rubric)
+
+### Completed/In-progress Tasks
+* Heatmap + top showcase embedded in portfolio template via `generate-site` (Completed)
+
+### What I Learned
+* Reusing the same scoring and heatmap helpers for both REST responses and static config generation avoids drift between “API shape” and “site data”
+* Optional sections in the Next.js page keep the template usable when analytics data is missing
+
+### Goals for Next Week
+* Polish portfolio template styling/accessibility for heatmap and showcase sections
+* Continue remaining Milestone 3 items (résumé/portfolio coherence, docs, test report)
