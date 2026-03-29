@@ -9,7 +9,7 @@
 - [T2 Week 6-8 Personal Logs](#term-2-week-6-8)
 - [T2 Week 9 Personal Logs](#term-2-week-9)
 - [T2 Week 10 Personal Logs](#term-2-week-10)
-- [T2 Week 11 Personal Logs](#term-2-week-11)
+- [T2 Week 11-12 Personal Logs](#term-2-week-11-12)
 
 **Term 1**
 
@@ -806,17 +806,19 @@ Building on last week's heatmap and top projects endpoints, this week focused on
 * Add client-side email format validation to the Profile form
 * Begin work on remaining Milestone 3 frontend features
 
-## Term 2 Week 11
+## Term 2 Week 11-12
 ### Date Range
-16th March 2026 - 22nd March 2026
+16th March 2026 - 29th March 2026
 
 ### Connection to Previous Week
-Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` APIs, this week wired that data into the **generated** Next.js portfolio (`portfolio-template`) when users run `POST /portfolio/generate-site`, so the Milestone 3 web portfolio shows an activity heatmap and a top-projects showcase without duplicating those UIs in the Electron app.
+Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` APIs, **Week 11** wired that data into the **generated** Next.js portfolio (`portfolio-template`) when users run `POST /portfolio/generate-site`, so the Milestone 3 web portfolio shows an activity heatmap and a top-projects showcase without duplicating those UIs in the Electron app. **Week 12** connected the **one-page résumé PDF** flow to the portfolio template so the site’s Resume button serves the **same** PDF the user generates in the dashboard (name, contact, education, project selection)—not a separately regenerated file.
 
 ### Type of Tasks Worked On
 ![Tahsin Type of Tasks Term 2 Week 11](images/tahsin-t2-week-11.png)
 
 **Coding Tasks:**
+
+*Week 11 — Heatmap & showcase in generated portfolio (`portfolio-template/` + `src/api/routers/portfolio.py`):*
 
 *Portfolio template (`portfolio-template/`):*
 * Extended `src/types/portfolio.ts` with optional `heatmap` and `showcase` on `DeveloperProfile`
@@ -829,24 +831,34 @@ Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` 
 * Extended `_build_portfolio_ts()` to emit optional `heatmap` and `showcase` blocks in the generated `portfolio.ts`
 * `generate_portfolio_site` now attaches heatmap + showcase to the profile dict before writing the template config (failures are logged and omitted rather than blocking site generation)
 
+*Week 12 — Résumé PDF ↔ portfolio static asset (`src/api/routers/resume.py`):*
+
+* After a successful compile from `POST /resume/pdf` (bundle résumé from the Electron “Generate PDF” modal) and `POST /resume/{project_id}/pdf`, copy the output PDF to `portfolio-template/public/resume.pdf` so Next.js serves it at `/resume.pdf` — matching `resumeUrl` in the generated `portfolio.ts` and keeping one canonical résumé aligned with user-entered profile fields
+* Added `portfolio-template/public/` (with `.gitkeep`) for static assets; copy failures are logged without breaking the download response
+* Added unit/integration coverage in `tests/api/test_resume_and_skills_endpoints.py` for `_copy_to_portfolio_public` and the bundle endpoint’s copy side effect
+
 **Testing Tasks:**
 
-* Added `tests/api/test_portfolio_site_generation.py` (11 tests): heatmap/showcase builder shape and ordering, empty-store behaviour, and `_build_portfolio_ts` embedding for heatmap/showcase vs omission when absent
+* `tests/api/test_portfolio_site_generation.py` (11+ tests): heatmap/showcase builder shape and ordering, empty-store behaviour, and `_build_portfolio_ts` embedding for heatmap/showcase vs omission when absent; `resumeUrl` points at `/resume.pdf`
+* `tests/api/test_resume_and_skills_endpoints.py`: résumé router tests including portfolio `public/resume.pdf` copy behaviour
 * Confirmed related suites still pass: `test_heatmap.py`, `test_top_projects.py`
 
 **Other:**
-* Compressed new frontend/test LOC (comments/whitespace) to keep the feature bundle small while preserving behaviour
+* Compressed new frontend/test LOC (comments/whitespace) where practical to keep the feature bundle small while preserving behaviour
 
 ### Task from Project Board
 * Milestone 3: web portfolio — activity heatmap and top-project showcase in generated site (aligned with course rubric)
+* Milestone 3: résumé and generated portfolio coherence (résumé button serves user-generated PDF)
 
 ### Completed/In-progress Tasks
 * Heatmap + top showcase embedded in portfolio template via `generate-site` (Completed)
+* User-generated résumé PDF copied to `portfolio-template/public/resume.pdf` on successful `POST /resume/pdf` / per-project PDF (Completed)
 
 ### What I Learned
 * Reusing the same scoring and heatmap helpers for both REST responses and static config generation avoids drift between “API shape” and “site data”
 * Optional sections in the Next.js page keep the template usable when analytics data is missing
+* Serving the portfolio résumé from the same artifact as the dashboard “Generate PDF” action avoids duplicate LaTeX runs and keeps contact/education consistent with what the user approved
 
 ### Goals for Next Week
 * Polish portfolio template styling/accessibility for heatmap and showcase sections
-* Continue remaining Milestone 3 items (résumé/portfolio coherence, docs, test report)
+* Final Milestone 3 wrap-up (docs, test report, demo prep) as needed
