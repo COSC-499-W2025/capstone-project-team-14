@@ -811,7 +811,7 @@ Building on last week's heatmap and top projects endpoints, this week focused on
 16th March 2026 - 29th March 2026
 
 ### Connection to Previous Week
-Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` APIs, **Week 11** wired that data into the **generated** Next.js portfolio (`portfolio-template`) when users run `POST /portfolio/generate-site`, so the Milestone 3 web portfolio shows an activity heatmap and a top-projects showcase without duplicating those UIs in the Electron app. **Week 12** connected the **one-page résumé PDF** flow to the portfolio template so the site’s Resume button serves the **same** PDF the user generates in the dashboard (name, contact, education, project selection)—not a separately regenerated file.
+Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` APIs, **Week 11** wired that data into the **generated** Next.js portfolio (`portfolio-template`) when users run `POST /portfolio/generate-site`, so the Milestone 3 web portfolio shows an activity heatmap and a top-projects showcase without duplicating those UIs in the Electron app. The same sprint extended **Week 11** with a **skills progression timeline** on the generated site: it aggregates `global_insights.chronological_skills` across the user’s selected projects (respecting per-project chronology overrides when present), computes first/last seen months, fractional years of experience, and project counts, and renders a year-grouped “learning over time” section—addressing the milestone rubric for demonstrating skill progression and depth beyond the dashboard-only Skills/Timeline tab. **Week 12** connected the **one-page résumé PDF** flow to the portfolio template so the site’s Resume button serves the **same** PDF the user generates in the dashboard (name, contact, education, project selection)—not a separately regenerated file.
 
 ### Type of Tasks Worked On
 ![Tahsin Type of Tasks Term 2 Week 11](images/tahsin-t2-week-11.png)
@@ -831,6 +831,18 @@ Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` 
 * Extended `_build_portfolio_ts()` to emit optional `heatmap` and `showcase` blocks in the generated `portfolio.ts`
 * `generate_portfolio_site` now attaches heatmap + showcase to the profile dict before writing the template config (failures are logged and omitted rather than blocking site generation)
 
+*Week 12 — Skills progression timeline in generated portfolio (`portfolio-template/` + `src/api/routers/portfolio.py`):*
+
+*Portfolio template (`portfolio-template/`):*
+* Extended `src/types/portfolio.ts` with `SkillProgressionItem`, `SkillTimelineEntry`, and optional `skillsTimeline` on `DeveloperProfile` (aligned optional `heatmap` / `showcase` / `ShowcaseProject` types with generated config)
+* Added `SkillsProgressionTimeline` client component (`src/components/skills-progression-timeline.tsx`): year-grouped vertical timeline, collapsible year buckets, skill cards with category badges, animated experience bars, optional “used in N projects”
+* Updated `src/app/page.tsx` to render the section only when `portfolio.skillsTimeline` exists and is non-empty (placed after **Skills**, before optional heatmap/showcase)
+
+*Backend (`src/api/routers/portfolio.py`):*
+* Added `_build_skills_progression(store, project_ids, reference_date=None)` — merges chronological skill events from selected portfolio projects; buckets skills by calendar year of first appearance; computes `yearsExperience` from first-seen month to generation date (overridable reference date for tests)
+* `generate_portfolio_site` calls `_build_skills_progression` with `req.project_ids`; failures are logged and skipped (generation still succeeds)
+* Extended `_build_portfolio_ts()` to emit optional `skillsTimeline` in generated `src/config/portfolio.ts`
+
 *Week 12 — Résumé PDF ↔ portfolio static asset (`src/api/routers/resume.py`):*
 
 * After a successful compile from `POST /resume/pdf` (bundle résumé from the Electron “Generate PDF” modal) and `POST /resume/{project_id}/pdf`, copy the output PDF to `portfolio-template/public/resume.pdf` so Next.js serves it at `/resume.pdf` — matching `resumeUrl` in the generated `portfolio.ts` and keeping one canonical résumé aligned with user-entered profile fields
@@ -839,26 +851,36 @@ Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` 
 
 **Testing Tasks:**
 
-* `tests/api/test_portfolio_site_generation.py` (11+ tests): heatmap/showcase builder shape and ordering, empty-store behaviour, and `_build_portfolio_ts` embedding for heatmap/showcase vs omission when absent; `resumeUrl` points at `/resume.pdf`
+* `tests/api/test_portfolio_site_generation.py` (20 tests): heatmap/showcase builder shape and ordering, empty-store behaviour, and `_build_portfolio_ts` embedding for heatmap/showcase vs omission when absent; **additional coverage for `_build_skills_progression`** (year buckets, skill entry shape, deduplication, `projectCount`, empty store → `None`, reference-date behaviour for years of experience, TS embed/omit for `skillsTimeline`); `resumeUrl` points at `/resume.pdf`
 * `tests/api/test_resume_and_skills_endpoints.py`: résumé router tests including portfolio `public/resume.pdf` copy behaviour
 * Confirmed related suites still pass: `test_heatmap.py`, `test_top_projects.py`
 
 **Other:**
 * Compressed new frontend/test LOC (comments/whitespace) where practical to keep the feature bundle small while preserving behaviour
 
+### Pull Request Reviews
+* Reviewed **Add about me, project showcase, and skills section to portfolio template #359**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/359)
+* Reviewed **BugFix: Fix Skills Timeline Crashing/Not Loading #361**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/361)
+* Reviewed **Feature for user to generate web portfolio #362**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/362)
+* Reviewed **Persist project edit/remove mutations with soft-delete snapshots and readback filtering (1/2) #371**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371)
+* Reviewed **Add Projects tab Edit/Remove UI wired to persisted project mutation endpoints (2/2) #372**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/372)
+* Reviewed **Polish generation modal UX and fix resume header contact layout #376**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/376)
+* Reviewed **Fix: Filtering #377**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/377)
+* Reviewed **Upload thumbnail and populate in portfolio #380**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/380)
+* Reviewed **Implement Dark Mode Toggle and Polish Dashboard/Timeline UI #387**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/387)
+
 ### Task from Project Board
 * Milestone 3: web portfolio — activity heatmap and top-project showcase in generated site (aligned with course rubric)
+* Milestone 3: web portfolio — **skills progression / timeline** on generated site (learning progression and depth; complements dashboard Skills/Timeline data)
 * Milestone 3: résumé and generated portfolio coherence (résumé button serves user-generated PDF)
 
 ### Completed/In-progress Tasks
 * Heatmap + top showcase embedded in portfolio template via `generate-site` (Completed)
+* **Skills progression timeline** embedded in portfolio template via `generate-site` (`skillsTimeline` + `SkillsProgressionTimeline` UI) (Completed)
 * User-generated résumé PDF copied to `portfolio-template/public/resume.pdf` on successful `POST /resume/pdf` / per-project PDF (Completed)
 
 ### What I Learned
 * Reusing the same scoring and heatmap helpers for both REST responses and static config generation avoids drift between “API shape” and “site data”
-* Optional sections in the Next.js page keep the template usable when analytics data is missing
+* Aggregating **chronological skills** for the static site reuses the same ingest-level `chronological_skills` store the dashboard timeline uses, so portfolio generation stays consistent with manual timeline edits and project overrides
+* Optional sections in the Next.js page keep the template usable when analytics data or timeline data is missing
 * Serving the portfolio résumé from the same artifact as the dashboard “Generate PDF” action avoids duplicate LaTeX runs and keeps contact/education consistent with what the user approved
-
-### Goals for Next Week
-* Polish portfolio template styling/accessibility for heatmap and showcase sections
-* Final Milestone 3 wrap-up (docs, test report, demo prep) as needed
