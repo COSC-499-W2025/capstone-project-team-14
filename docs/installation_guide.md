@@ -53,7 +53,8 @@ Optional:
 - SQLite (embedded DB; no separate DB server required)
 - Optional host tools used by scripts: `curl`, `lsof`
 
-## 5. Initial Setup
+## 5. Developmental Setup
+**Note: This inital setup is for development purpose, to run the whole application as a user would see it (docker, frontend, portfolio), see section [Running the Application Locally](#running-the-application-locally).
 
 ### Option A (Recommended): Docker backend + local frontend tooling
 
