@@ -7,6 +7,7 @@
 [Semester 2 Week 8 Individual Logs](#semester-2-week-8-individual-logs)<br>
 [Semester 2 Week 9 Individual Logs](#semester-2-week-9-individual-logs)<br>
 [Semester 2 Week 10 Individual Logs](#semester-2-week-10-individual-logs)<br>
+[Semester 2 Week 12 Individual Logs](#semester-2-week-12-individual-logs)<br>
 [Week 3 Individual Logs](#week-3)<br>
 [Week 4 Individual Logs](#week-4)<br>
 [Week 5 Individual Logs](#week-5)<br>
@@ -18,6 +19,92 @@
 [Week 12 Individual Logs](#week-12)<br>
 [Week 13 Individual Logs](#week-13)<br>
 [Week 14 Individual Logs](#week-14)
+
+---
+
+## Semester 2 Week 12 Individual Logs
+
+### March 16 2026 to March 29 2026
+
+### 1. Type of Tasks Worked On
+
+![Abijeet Dhillon Semester 2 Week 12 Task Types Screenshot](images/abijeetdhillon_s2w12_tasks.png)
+
+---
+
+### 2. Recap of Weekly Goals
+
+During this cycle, my work focused on final Milestone 3 delivery and polish across feature stability, persistence, and documentation. I prepared and delivered the Milestone 3 presentation, fixed the Skills Timeline crash/loading bug, completed full persisted edit/remove support for Projects across backend and frontend, and finished end-to-end profile persistence updates spanning schema, API integration, resume/portfolio generation, and frontend wiring.
+
+I worked on Issue #360, Issue #370, Issue #368, Issue #388, Issue #389, Issue #399, Issue #402, and Issue #397, implemented through PR #361, PR #371, PR #372, PR #390, PR #391, PR #400, PR #403, and PR #405. These changes closed key Milestone 3 gaps by stabilizing timeline behavior, ensuring project/profile mutations persist reliably, resolving failing milestone tests, and completing known bugs plus installation documentation.
+
+**Pull Request / Issue References**
+
+- Issue: [#360](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/360)
+- Issue: [#368](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/368)
+- Issue: [#370](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/370)
+- Issue: [#388](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/388)
+- Issue: [#389](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/389)
+- Issue: [#399](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/399)
+- Issue: [#402](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/402)
+- Issue: [#397](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/397)
+- PR: [#361](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/361)
+- PR: [#371](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371)
+- PR: [#372](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/372)
+- PR: [#390](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/390)
+- PR: [#391](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/391)
+- PR: [#400](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/400)
+- PR: [#403](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/403)
+- PR: [#405](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/405)
+
+**Issues / Blockers**
+
+The main blocker this cycle was limited working capacity during part of the sprint due to medical treatment (Professor Hui has my Doctor's note).
+
+**Coding Recap**
+
+In PR #361, I fixed the Skills Timeline frontend crash/loading issue so timeline data could render consistently. In PR #371 and PR #372, I delivered persisted Projects edit/remove support end-to-end, with backend soft-delete snapshot handling and readback filtering plus frontend Projects tab UI wiring to the mutation endpoints. In PR #390 and PR #391, I extended profile persistence by updating the user_configurations schema and integrating persisted profile data into API flows, resume/portfolio generation, and frontend profile behavior. I also completed Milestone 3 stabilization and documentation work via PR #400 (failing tests fix), PR #403 (known bugs documentation), and PR #405 (installation guide updates).
+
+**Testing Recap**
+
+My testing work this cycle focused on persistence reliability and Milestone 3 regression stability. This included validating Skills Timeline load behavior after the crash fix, verifying project edit/remove persistence across backend storage and frontend UI readback, and confirming profile persistence propagation through API and generation workflows. I also fixed the failing `test_project_filter.py` Milestone 3 test issues in PR #400 and re-ran targeted checks around the updated persistence and integration paths.
+
+---
+
+### 3. Features Owned in Project Plan/Tasks from Project Board Associated with These Features
+
+- Milestone 3 presentation preparation and delivery
+- Fix Skills Timeline crashing/not loading ([Issue #360](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/360), [PR #361](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/361))
+- Persist Projects edit/remove in backend storage and API ([Issue #370](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/370), [PR #371](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371))
+- Add Projects tab edit/remove UI wired to persisted mutation endpoints ([Issue #368](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/368), [PR #372](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/372))
+- Extend persisted profile schema in `user_configurations` ([Issue #388](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/388), [PR #390](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/390))
+- Wire persisted profile into API, resume/portfolio generation, and frontend UI ([Issue #389](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/389), [PR #391](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/391))
+- Milestone 3 test stabilization ([Issue #399](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/399), [PR #400](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/400))
+- Known bugs documentation ([Issue #402](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/402), [PR #403](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/403))
+- Installation guide updates ([Issue #397](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/397), [PR #405](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/405))
+
+---
+
+### 4. Tasks Completed / In Progress in the Last 2 Weeks
+
+| Task ID | Issue | Status | Notes |
+| ------- | ----- | ------ | ----- |
+
+| N/A | Milestone 3 Presentation Preparation and Delivery | Completed | Prepared and delivered Milestone 3 presentation |
+| 360 | [Bugfix: Fix Skills Timeline On Frontend Issue #360](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/360) | Completed | Completed in [PR #361](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/361) |
+| 370 | [Persist project edit/remove in backend storage and API Issue #370](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/370) | Completed | Completed in [PR #371](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371) |
+| 368 | [Add Projects tab Edit/Remove UI and wire to persisted project mutation endpoints Issue #368](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/368) | Completed | Completed in [PR #372](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/372) |
+| 388 | [Extend Schema In user_configurations To Support Persistence With Profile Section Updates Issue #388](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/388) | Completed | Completed in [PR #390](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/390) |
+| 389 | [Update Frontend Profile With Profile API, Resume/Portfolio Generation, and Persistence Issue #389](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/389) | Completed | Completed in [PR #391](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/391) |
+| 399 | [Bugfix: Failing Tests Milestone 3 Issue #399](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/399) | Completed | Completed in [PR #400](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/400) |
+| 402 | [Known Bugs Documentation Issue #402](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/402) | Completed | Completed in [PR #403](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/403) |
+| 397 | [Installation Guide Issue #397](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/397) | Completed | Completed in [PR #405](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/405) |
+
+---
+
+### 5. Future Cycle Plans & Reflection On This Week
+
+- This cycle was productive and helped wrap up the remaining Milestone 3 implementation, stabilization, and documentation work. The project-side goals for this term are now effectively complete, so my next plans are to shift focus to studying for finals since no additional project work is currently scheduled.
 
 ---
 
