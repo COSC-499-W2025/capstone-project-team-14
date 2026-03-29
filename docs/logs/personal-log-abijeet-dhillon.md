@@ -26,6 +26,8 @@
 
 ### March 16 2026 to March 29 2026
 
+### NOTE: This log covers week 11 and 12 (as stated in the course schedule on Canvas).
+
 ### 1. Type of Tasks Worked On
 
 ![Abijeet Dhillon Semester 2 Week 12 Task Types Screenshot](images/abijeetdhillon_s2w12_tasks.png)
@@ -89,7 +91,6 @@ My testing work this cycle focused on persistence reliability and Milestone 3 re
 
 | Task ID | Issue | Status | Notes |
 | ------- | ----- | ------ | ----- |
-
 | N/A | Milestone 3 Presentation Preparation and Delivery | Completed | Prepared and delivered Milestone 3 presentation |
 | 360 | [Bugfix: Fix Skills Timeline On Frontend Issue #360](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/360) | Completed | Completed in [PR #361](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/361) |
 | 370 | [Persist project edit/remove in backend storage and API Issue #370](https://github.com/COSC-499-W2025/capstone-project-team-14/issues/370) | Completed | Completed in [PR #371](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371) |
