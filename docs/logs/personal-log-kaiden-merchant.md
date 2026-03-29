@@ -20,6 +20,7 @@
 1. [Semester 2 - Week 6/7](#semester-2---week-67)
 1. [Semester 2 - Week 9](#semester-2---week-9)
 1. [Semester 2 - Week 10](#semester-2---week-10)
+1. [Semester 2 - Week 11/12](#semester-2---week-1112)
 
 ## Week 3
 This section outlines the individual log for week 3
@@ -1147,4 +1148,68 @@ This section outlines the individual log for Semester 2 - Week 10
 - Build the Experience timeline section
 - Add Contact CTA section
 - Verify/do work to make sure all peer-testing tasks are complete and ready
+
+## Semester 2 - Week 11/12
+This section outlines the individual log for Semester 2 - Week 11/12
+
+### March 16 - March 29
+
+### Tasks
+![](images/kaiden_sem2_week1112_tasks.png)
+
+### Weekly Goals
+
+1. My Features:
+    - Expand the web portfolio template with additional sections and data-driven components.
+    - Implement end-to-end portfolio generation so users can generate a portfolio from selected projects.
+    - Add project thumbnail upload support so each project can have a visual cover image.
+    - Fix drag-and-drop ZIP upload in the desktop upload zone to improve UX reliability.
+    - Record and prepare milestone demo video content.
+
+2. Associated Tasks
+    - Portfolio Template Enhancement and Integration
+    - Portfolio Generation Flow Implementation
+    - Thumbnail Upload Feature
+    - Upload Zone Drag/Drop Bugfix
+    - Milestone Demo Video Preparation
+
+3. Completed/In-Progress
+    - ✅ Expanded the `portfolio-template` site implementation:
+        - Continued building reusable section components and dynamic rendering from portfolio config.
+        - Improved overall template structure so generated data maps cleanly into the UI.
+        - Verified generated sections render conditionally based on available profile/project data.
+    - ✅ Implemented the user-facing portfolio generation feature:
+        - Wired generation flow from backend endpoint to template output.
+        - Ensured selected project data is transformed into template-compatible config.
+        - Verified generated portfolio site can be launched and viewed after generation.
+    - ✅ Added project thumbnail upload and association:
+        - Implemented backend support to upload, store, retrieve, and delete project thumbnail images.
+        - Linked thumbnail metadata to project records so portfolio displays can consume project images.
+        - Added fallback behavior when a project has no thumbnail.
+    - ✅ Fixed upload zone drag-and-drop bug:
+        - Identified issue where dropped files sometimes had no readable path in Electron.
+        - Implemented fallback handling so dropped ZIP bytes can still be prepared for upload.
+        - Preserved existing "Select ZIP File" behavior while making drag/drop reliable.
+    - ✅ Worked on milestone video production:
+        - Captured key feature flows (upload/analyze, portfolio generation, thumbnails, and UX fixes).
+        - Prepared concise walkthrough segments to demonstrate milestone outcomes clearly.
+
+### Reflection Points
+
+**What went well:**
+- The portfolio template and generation flow now feel cohesive, with backend data feeding directly into a presentable site.
+- Thumbnail support adds strong visual polish and makes project cards feel much more complete.
+- The drag/drop fix removed a recurring friction point and improved the upload experience significantly.
+- End-to-end testing of generation + rendering + upload workflows gave confidence before video recording.
+
+**What didn't go well:**
+- Some integration points required multiple iterations to align backend payload shape with frontend template expectations.
+- Handling edge cases for file upload paths in Electron took longer than expected due to OS/runtime differences.
+- Video preparation and retakes took additional time while final bugfixes were still being completed.
+
+**Technical Decisions:**
+- Kept the portfolio template data-driven so generation logic only needs to write config data, not modify component code.
+- Used conditional rendering for optional sections (e.g., thumbnails and enriched project content) to avoid brittle UI states.
+- Implemented drag/drop fallback logic instead of relying solely on file path availability to improve cross-environment reliability.
+- Maintained compatibility with existing upload and project APIs while adding thumbnail and generation capabilities.
 
