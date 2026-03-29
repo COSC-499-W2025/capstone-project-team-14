@@ -865,9 +865,9 @@ Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` 
 * Reviewed **Persist project edit/remove mutations with soft-delete snapshots and readback filtering (1/2) #371**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/371)
 * Reviewed **Add Projects tab Edit/Remove UI wired to persisted project mutation endpoints (2/2) #372**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/372)
 * Reviewed **Polish generation modal UX and fix resume header contact layout #376**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/376)
-* Reviewed **Fix: Filtering #377**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/377)
 * Reviewed **Upload thumbnail and populate in portfolio #380**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/380)
-* Reviewed **Implement Dark Mode Toggle and Polish Dashboard/Timeline UI #387**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/387)
+* Reviewing **Implement Dark Mode Toggle and Polish Dashboard/Timeline UI #387**: [Link](https://github.com/COSC-499-W2025/capstone-project-team-14/pull/387)
+* Will review more PRs as they come around.
 
 ### Task from Project Board
 * Milestone 3: web portfolio — activity heatmap and top-project showcase in generated site (aligned with course rubric)
