@@ -7,6 +7,7 @@
 [Semester 2 - Week 6-8 Team Logs](#s2w6w8)<br>
 [Semester 2 - Week 9 Team Logs](#s2w9)<br>
 [Semester 2 - Week 10 Team Logs](#s2w10)<br>
+[Semester 2 - Week 11-12 Team Logs](#s2w11w12)<br>
 [Week 3 Team Logs](#week-3)<br>
 [Week 4 Team Logs](#week-4)<br>
 [Week 5 Team Logs](#week-5)<br>
@@ -969,6 +970,180 @@ This week showed clear progress from isolated milestone features toward connecte
 - Prioritize integration polish and shared validation workflows, not just feature completion
 - Make sure weekly documentation artifacts are uploaded at the same pace as code and tests
 - Focus next on connecting profile, resume, timeline, and portfolio outputs into a coherent Milestone 3 user experience
+
+---
+
+<a id="s2w11w12"></a>
+## Semester 2 - Week 11-12 (Weeks 25-26 - March 16 2026 to March 29 2026)
+
+### March 16 2026 to March 29 2026
+
+### 1. Milestone Goals Recap
+
+This two-week sprint drove Milestone 3 to completion. The team focused on end-to-end integration polish, persistence reliability, LLM correctness, portfolio generation, and final documentation. All GitHub Project tasks for this period are now done with nothing pending.
+
+Planned Features for This Milestone:
+- Surface AI analysis insights in the desktop UI and fix LLM integration bugs
+- Redesign the Skills Timeline and fix filter engine SQL issues
+- Deliver persisted project edit/remove and profile persistence across backend, API, resume, and portfolio generation
+- Expand the portfolio template with remaining sections and wire generation end-to-end
+- Connect heatmap, showcase, and skills progression timeline into the generated portfolio site
+- Link the one-page resume PDF to the portfolio template as a static asset
+- Implement Dark Mode, cross-platform startup scripts, and modal layout polish
+- Add project thumbnail upload support
+- Fix drag-and-drop ZIP upload bug
+- Stabilize Milestone 3 tests, document known bugs, and update installation guide
+
+Tasks from Project Board/PR Issue Number Associated with These Features:
+- #360 Bugfix: Fix Skills Timeline On Frontend
+- #368 Add Projects tab Edit/Remove UI wired to persisted mutation endpoints
+- #370 Persist project edit/remove in backend storage and API
+- #388 Extend Schema In user_configurations To Support Persistence With Profile Section Updates
+- #389 Update Frontend Profile With Profile API, Resume/Portfolio Generation, and Persistence
+- #399 Bugfix: Failing Tests Milestone 3
+- #402 Known Bugs Documentation
+- #397 Installation Guide
+- #365 Connect resume to the portfolio website
+- #373 Enhance Web Portfolio with Heatmap and Showcase
+- #381 Implement Skills Timeline into Web Portfolio
+- #406 Fix resume bullet storage bug and implement AI resume bullet service
+- #379 Cross-platform startup wrapper scripts
+- #386 Dark Mode and Dashboard/Timeline UI polish
+- #375 Resume and portfolio modal improvements
+- Portfolio Template Enhancement and Integration
+- Portfolio Generation Flow Implementation
+- Thumbnail Upload Feature
+- Upload Zone Drag/Drop Bugfix
+
+---
+
+### 2. Burnup Chart
+
+![Burnup Chart For Weeks 11-12](images/insights-mar15-mar29.jpeg)
+
+---
+
+### 3. Username - Student Name Mapping
+
+| GitHub Username | Student Name    |
+| --------------- | --------------- |
+| abijeet-dhillon | Abijeet Dhillon |
+| tahsinj         | Tahsin Jawwad   |
+| kmerchant1      | Kaiden Merchant |
+| Malik-Abhinav   | Abhinav Malik   |
+| abdur026        | Abdur Rehman    |
+| mishgGavura     | Misha Gavura    |
+
+---
+
+### 4. Completed / In Progress Tasks
+
+| Task ID | Issue Title | Username | Associated Feature | Status |
+| ------- | ----------- | -------- | ------------------ | ------ |
+| 360 | Bugfix: Fix Skills Timeline On Frontend | abijeet-dhillon | Skills Timeline crash fix | Completed |
+| 370 | Persist project edit/remove in backend storage and API | abijeet-dhillon | Project mutation persistence (backend) | Completed |
+| 368 | Add Projects tab Edit/Remove UI wired to persisted mutation endpoints | abijeet-dhillon | Project mutation persistence (frontend) | Completed |
+| 388 | Extend Schema In user_configurations To Support Persistence With Profile Section Updates | abijeet-dhillon | Profile persistence schema | Completed |
+| 389 | Update Frontend Profile With Profile API, Resume/Portfolio Generation, and Persistence | abijeet-dhillon | Profile persistence end-to-end | Completed |
+| 399 | Bugfix: Failing Tests Milestone 3 | abijeet-dhillon | Milestone 3 test stabilization | Completed |
+| 402 | Known Bugs Documentation | abijeet-dhillon | Documentation | Completed |
+| 397 | Installation Guide | abijeet-dhillon | Documentation | Completed |
+| 365 | Connect resume to the portfolio website | tahsinj | Resume PDF as portfolio static asset | Completed |
+| 373 | Enhance Web Portfolio with Heatmap and Showcase | tahsinj | Heatmap and top-projects showcase in generated portfolio | Completed |
+| 381 | Implement Skills Timeline into Web Portfolio | tahsinj | Skills progression timeline in generated portfolio | Completed |
+| 406 | Fix resume bullet storage bug + AI resume bullet service | Malik-Abhinav | AI resume bullet generation and LLM integration correctness | Completed |
+| 379 | Cross-platform startup wrapper scripts | Malik-Abhinav | Deployment and startup scripts | Completed |
+| 386 | Dark Mode + Dashboard/Timeline UI polish | Malik-Abhinav | Frontend Dark Mode and UI polish | Completed |
+| 375 | Resume and portfolio modal improvements | Malik-Abhinav | Modal layout and contact header fix | Completed |
+| N/A | AI Analysis tab, OpenAI compatibility, Skills Timeline redesign, Filter engine bug fix | mishgGavura | LLM UI, OpenAI client fallback, timeline redesign, tag filter SQL fix | Completed |
+| N/A | Portfolio template expansion, generation flow, thumbnail upload, drag/drop bugfix, milestone demo video | kmerchant1 | Portfolio template and generation end-to-end | Completed |
+| N/A | Milestone 3 Presentation Preparation and Delivery | abijeet-dhillon | Milestone 3 presentation | Completed |
+
+---
+
+### 5. Test Report
+
+All new work this sprint was accompanied by automated tests or build validation. No pending tasks remain in the GitHub Project.
+
+*Tahsin (Portfolio Heatmap, Showcase, Skills Timeline, Resume PDF)*
+- `tests/api/test_portfolio_site_generation.py` — 20 tests covering heatmap/showcase builder shape and ordering, empty-store behavior, `_build_portfolio_ts` embedding, `_build_skills_progression` (year buckets, skill entry shape, deduplication, `projectCount`, empty store, reference-date behavior), `resumeUrl` pointing at `/resume.pdf`, and TS embed/omit for `skillsTimeline`
+- `tests/api/test_resume_and_skills_endpoints.py` — resume router tests including portfolio `public/resume.pdf` copy behavior
+- Confirmed `test_heatmap.py` and `test_top_projects.py` still pass with no regressions
+
+*Abijeet (Skills Timeline Fix, Project Edit/Remove Persistence, Profile Persistence, Test Stabilization)*
+- Validated Skills Timeline load behavior after the crash fix
+- Verified project edit/remove persistence across backend storage and frontend UI readback
+- Confirmed profile persistence propagation through API and generation workflows
+- Fixed failing `test_project_filter.py` Milestone 3 test issues in PR #400 and re-ran targeted checks around persistence and integration paths
+
+*Abhinav (AI Resume Bullets, Dark Mode, Modal Polish, Startup Scripts)*
+- 38 tests for `resume_bullet_service.py` covering AI bullet generation, pipeline integration, summary field, and centralized model config
+- Frontend `npm run test` validated dark mode, timeline dot alignment, path prefix stripping, and placeholder card hiding
+- Modal polish tests verified grouped sections, footer CTA visibility, and inline contact rendering in LaTeX output
+- Startup scripts tested on macOS and Windows
+
+*Misha (AI Analysis Tab, Filter Engine Fix, Skills Timeline Redesign)*
+- `tests/insights/test_project_filter.py` — 38 tests passing after rewriting tag filtering SQL to `json_each(tags_json)` with case-insensitive matching
+- `tests/insights/test_skill_trends.py` — 2 tests passing after aligning `get_skill_trends` and `get_skill_progression` with the tag fix
+- Manual testing of upload consent paths (with/without AI checkbox), Overview vs AI Analysis tab, empty state, and `gpt-5.2` vs `gpt-4o-mini` model paths
+
+*Kaiden (Portfolio Template, Generation, Thumbnails, Drag/Drop Fix)*
+- End-to-end testing of generation, rendering, and upload workflows
+- Verified generated sections render conditionally based on available profile and project data
+- Confirmed drag/drop fallback handling works across environments
+
+![Test results week 11-12 (1)](images/test-images/mar29-tests1.jpeg)
+![Test results week 11-12 (2)](images/test-images/mar29-tests2.jpeg)
+![Test results week 11-12 (3)](images/test-images/mar29-tests3.jpeg)
+![Test results week 11-12 (4)](images/test-images/mar29-tests4.jpeg)
+![Test results week 11-12 (5)](images/test-images/mar29-tests5.jpeg)
+![Test results week 11-12 (6)](images/test-images/mar29-tests6.png)
+
+---
+
+### 6. Additional Context
+
+This sprint brought Milestone 3 to a complete state across all planned feature areas:
+
+- The *AI Analysis tab* now shows LLM-generated summaries, resume bullets, project scores, and detected skills when AI-Enhanced Analysis was enabled at upload, with a clear empty state when consent was not given. The underlying resume bullet storage bug was fixed so AI-generated bullets are actually persisted and served rather than silently discarded.
+- The *Skills Timeline* received both a visual redesign (ClickUp-inspired layout) and a critical crash/loading fix. The filter engine's SQL was rewritten from joining an unpopulated `skill_evidence` table to using `json_each(tags_json)` with case-insensitive matching, fixing zero-result queries for language, framework, and skill filters.
+- *Project and profile persistence* was completed end-to-end: project edit/remove mutations now use soft-delete snapshots with readback filtering, and profile fields propagate through schema, API, resume/portfolio generation, and frontend UI.
+- The *generated portfolio site* now includes an activity heatmap, top-projects showcase, and a skills progression timeline aggregated from chronological skill data across selected projects, all rendered conditionally when data is available.
+- The *one-page resume PDF* is linked to the portfolio template as a static asset, so the site Resume button serves the same PDF the user generates in the dashboard.
+- *Dark Mode* was implemented across the frontend with CSS variable overrides and a global theme toggle. Cross-platform startup scripts (`start-miner.sh` / `start-miner.bat`) and updated README Quick Start documentation improve the onboarding experience.
+- *Thumbnail upload* and a *drag-and-drop bugfix* round out the UX improvements, with fallback handling for dropped ZIP files in Electron.
+- *Documentation* was updated with known bugs, installation guide improvements, and the Milestone 3 presentation was prepared and delivered.
+- OpenAI client compatibility was hardened with a fallback sequence (`max_tokens` → `max_completion_tokens` → no token param) to handle model/SDK mismatches across `gpt-5.2`, `gpt-4o-mini`, and other models.
+
+---
+
+### 7. Future Cycle Plans
+
+- All Milestone 3 tasks are complete with nothing pending in the GitHub Project
+- Address any remaining feedback from peer testing or final review
+- Shift focus to final exam preparation as no additional project work is currently scheduled
+- Continue monitoring for any last-minute integration issues
+
+---
+
+### 8. Reflection on This Cycle
+
+*What went well:*
+- The team successfully delivered all remaining Milestone 3 features across frontend, backend, portfolio generation, and documentation in a single coordinated sprint
+- Multiple complex end-to-end flows (resume generation, portfolio site generation, profile persistence, project mutations) were completed and validated together
+- Extensive PR review activity kept code quality high, with Tahsin alone reviewing 8 PRs and other contributors actively reviewing each other's work
+- Test coverage remained strong throughout, with targeted automated tests and manual validation across all feature areas
+- The portfolio template architecture (single config file as source of truth) made generation integration clean and maintainable
+
+*What could be improved:*
+- Some integration points required multiple iterations to align backend payload shapes with frontend template expectations
+- The resume bullet storage bug should have been caught earlier, as it was a silent no-op that masked missing LLM integration for several weeks
+- Handling edge cases for file upload paths in Electron took longer than expected due to OS and runtime differences
+
+*How this informs us for the next cycle:*
+- End-to-end integration testing should happen earlier in the development cycle to catch silent failures like the resume bullet bug
+- Cross-platform testing should be factored into time estimates when building Electron features
+- The data-driven portfolio template approach proved successful and could serve as a model for similar generation workflows
 
 ---
 
