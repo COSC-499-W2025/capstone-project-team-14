@@ -797,4 +797,36 @@ This section outlines the individual log for week 15 of Semester 2
   - Ensure smooth integration with the `develop` branch.
   - Consider adding additional analytics or visualization features for skills data.
 
+  ---
   
+## Week 12 Semester 2  
+### Tasks
+![](images/abdur-week12s2.png)
+- **LinkedIn Post Generator**: Added a per-project "Generate LinkedIn Post" feature. Wired the existing `/linkedin/preview/{project_id}` backend endpoint to the frontend via a new modal with hashtag/emoji toggles and one-click clipboard copy.
+- **Interactive Web Portfolio Dashboard**: Built a `DashboardShell` component with global search and tag-based filtering for the generated portfolio site.
+- **Section Visibility Controls**: Added pre-generation section visibility checkboxes to the Electron app's portfolio modal, allowing users to hide/show About Me, Skills, Skills Progression, Heatmap, Top Projects, and Projects Grid before generating.
+- **Backend Portfolio Config Updates**: Extended `PortfolioSiteRequest` and `_build_portfolio_ts` to accept and serialize `hidden_sections` into the generated TypeScript config.
+- **Merge Conflict Resolution**: Resolved 5-file merge conflict between `dashboard-private-public-ar` and `develop`, integrating both the skills progression timeline and hidden sections features cleanly.
+- **Testing Implementation**: Added 7 pytest tests for hidden sections serialization and model validation. All 35 backend tests passing.
+---
+### Weekly Goals
+1. **Feature Development**
+   - Implement the LinkedIn post generator modal and connect it to the existing backend API.
+   - Build an interactive portfolio dashboard with search/filter functionality.
+   - Add section visibility controls so users can customize their portfolio before generation.
+2. **Testing & Quality**
+   - Write backend tests for the hidden sections feature in `_build_portfolio_ts` and `PortfolioSiteRequest`.
+   - Ensure all existing tests continue to pass with no regressions.
+  
+---
+### Reflection Points
+- **What went well**
+  - Successfully delivered two full features (LinkedIn post generator and portfolio dashboard) in a single week.
+  - Reused the existing LinkedIn backend API without any new backend changes.
+  - Merge conflicts were resolved cleanly with all tests passing after integration.
+  - The section visibility approach was refactored based on feedback to happen pre-generation rather than on the live site, which was a better UX decision.
+- **What didn't go well**
+  - Initial implementation of the portfolio customization was built on the wrong page (the generated site instead of the Electron modal), requiring a full refactor.
+  - Docker disk space issues caused delays at the start of the week.
+---
+
