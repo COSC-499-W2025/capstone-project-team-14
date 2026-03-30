@@ -1,6 +1,6 @@
 # Individual Log - Abhinav Malik
 
-[Semester 2 - Week 1](#s2w1) | [Semester 2 - Week 2](#s2w2) | [Semester 2 - Week 3](#s2w3) | [Semester 2 - Week 4-5](#s2w4w5) | [Semester 2 - Week 6-8](#s2w6w8) | [Semester 2 - Week 9](#s2w9) | [Semester 2 - Week 10](#s2w10)  
+[Semester 2 - Week 1](#s2w1) | [Semester 2 - Week 2](#s2w2) | [Semester 2 - Week 3](#s2w3) | [Semester 2 - Week 4-5](#s2w4w5) | [Semester 2 - Week 6-8](#s2w6w8) | [Semester 2 - Week 9](#s2w9) | [Semester 2 - Week 10](#s2w10) | [Semester 2 - Week 11-12](#s2w11w12)  
 [Semester 1 - Week 3](#s1w3) | [Semester 1 - Week 4](#s1w4) | [Semester 1 - Week 5](#s1w5) | [Semester 1 - Week 6](#s1w6) | [Semester 1 - Week 7](#s1w7) | [Semester 1 - Week 8](#s1w8)  
 [Semester 1 - Week 9](#s1w9) | [Semester 1 - Week 10](#s1w10) | [Semester 1 - Week 12](#s1w12) | [Semester 1 - Week 13](#s1w13) | [Semester 1 - Week 14](#s1w14)
 
@@ -343,6 +343,71 @@ My contributions included:
 
  - Support PR review follow-up and any requested refinements for the resume workflow.
  - Continue Milestone 3 frontend integration work with the rest of the dashboard features.
+
+<a id="s2w11w12"></a>
+## Semester 2 - Week 11-12 (Week 25-26 - March 16 to March 29, 2026)
+
+### 1. Type of Tasks Worked On
+![Week 25-26 Task Screenshot](images/week-10-12.png)
+
+---
+
+### 2. Recap of Weekly Goals
+
+These two weeks focused on Milestone 3 polish, LLM integration correctness, and cross-platform deployment improvements.
+My contributions included:
+- fixing a structural bug where AI-generated resume bullets were never stored and template bullets were unconditionally regenerated on every fetch
+- implementing a dedicated resume bullet service (`resume_bullet_service.py`) that generates project-specific bullet points via OpenAI with JSON, markdown-wrapped JSON, and line-by-line fallback parsing
+- wiring the bullet service into the artifact pipeline with `_generate_ai_resume_bullets()` and `_clean_summary()`, running after step 9 when `use_llm=True`
+- adding a `summary` field to `PortfolioItem` with a template fallback to fix the bug where Description and Summary showed identical text
+- centralizing LLM model configuration via a single `OPENAI_MODEL` env var exposed through `openai_client.py` and consumed by all services
+- adding cross-platform startup wrapper scripts (`start-miner.sh` / `start-miner.bat`) with exit traps, `--build` enforcement, and a Quick Start section in `README.md`
+- implementing Dark Mode across the frontend with a global theme state, CSS variable overrides, and improved theme toggle visibility
+- fixing timeline dot alignment and stripping backend `/tmp/unzipped...` path prefixes so only relative paths appear in the UI
+- polishing the resume and portfolio generation modals with grouped field sections, two-column layouts, sticky footer CTAs, and inline contact header rendering in the generated PDF
+
+---
+
+### 3. Features Owned in Project Plan
+
+ - AI resume bullet generation and LLM integration correctness
+ - Centralized model configuration
+ - Cross-platform startup scripts and deployment documentation
+ - Frontend Dark Mode and UI polish (timeline, dashboard, modals)
+ - Resume contact header and modal layout fixes
+
+---
+
+### 4. Tasks from Project Board Associated with These Features
+
+ - Issue #406 - Fix resume bullet storage bug and implement AI resume bullet service
+ - Issue #379 - Add cross-platform startup wrapper scripts
+ - Issue #386 - Dark Mode and Dashboard/Timeline UI polish
+ - Issue #375 - Resume and portfolio modal improvements and contact header fix
+
+---
+
+### 5. Tasks Completed / In Progress in the Last 2 Weeks
+| Task ID | Issue Title                                                  | Status     | Notes |
+|---------|--------------------------------------------------------------|------------|-------|
+| 406     | Fix resume bullet storage bug + AI resume bullet service     | Completed  | Added resume_bullet_service.py, pipeline integration, summary field, centralized model config, and 38 tests |
+| 379     | Cross-platform startup wrapper scripts                       | Completed  | Added start-miner.sh and start-miner.bat with docker --build, exit traps, README Quick Start, and TEST_RESULTS entry |
+| 386     | Dark Mode + Dashboard/Timeline UI polish                     | Completed  | Added global theme state, CSS variable overrides, fixed timeline dot alignment, stripped /tmp paths, hid placeholder cards |
+| 375     | Resume and portfolio modal improvements                      | Completed  | Reworked modal layout with grouped sections, sticky footer CTA, inline contact header in PDF, and new UI tests |
+
+---
+
+### 6. Additional Context
+
+ - The resume bullet fix required changes across `presentation.py`, `orchestrator.py`, and a new `resume_bullet_service.py`; the LLM integration was previously a no-op due to the storage bug.
+ - Model configuration is now a single `.env` change (`OPENAI_MODEL`), verified by re-uploading with `gpt-4o` and confirming the new model was used without code edits.
+ - Startup scripts were tested on both macOS and Windows; the `--build` flag ensures fresh backend images on clean clones.
+ - Dark Mode and timeline path cleanup were validated with `npm run test` and manual UI walkthroughs.
+ - Modal polish tests verified grouped sections, footer CTA visibility, and inline contact rendering in LaTeX output.
+
+---
+
+
 
 ## Semester 1
 
