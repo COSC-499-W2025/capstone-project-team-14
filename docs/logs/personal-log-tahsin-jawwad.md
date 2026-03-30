@@ -870,14 +870,14 @@ Building on Term 2 Week 9’s `GET /portfolio/heatmap` and `GET /portfolio/top` 
 * Will review more PRs as they come around.
 
 ### Task from Project Board
-* Milestone 3: web portfolio — activity heatmap and top-project showcase in generated site (aligned with course rubric)
-* Milestone 3: web portfolio — **skills progression / timeline** on generated site (learning progression and depth; complements dashboard Skills/Timeline data)
-* Milestone 3: résumé and generated portfolio coherence (résumé button serves user-generated PDF)
+* Connect resume to the portfolio website #365
+* Enhance Web Portfolio with Heatmap and Showcase #373
+* Implement Skills Timeline into Web Portfolio #381
 
 ### Completed/In-progress Tasks
-* Heatmap + top showcase embedded in portfolio template via `generate-site` (Completed)
-* **Skills progression timeline** embedded in portfolio template via `generate-site` (`skillsTimeline` + `SkillsProgressionTimeline` UI) (Completed)
-* User-generated résumé PDF copied to `portfolio-template/public/resume.pdf` on successful `POST /resume/pdf` / per-project PDF (Completed)
+* Connect resume to the portfolio website #365 (Completed)
+* Enhance Web Portfolio with Heatmap and Showcase #373 (Completed)
+* Implement Skills Timeline into Web Portfolio #381 (Completed)
 
 ### What I Learned
 * Reusing the same scoring and heatmap helpers for both REST responses and static config generation avoids drift between “API shape” and “site data”
