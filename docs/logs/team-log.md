@@ -993,6 +993,9 @@ Planned Features for This Milestone:
 - Add project thumbnail upload support
 - Fix drag-and-drop ZIP upload bug
 - Stabilize Milestone 3 tests, document known bugs, and update installation guide
+- Add LinkedIn Post Generator modal connected to existing backend API
+- Build interactive web portfolio dashboard with search and tag filtering
+- Add pre-generation section visibility controls for portfolio customization
 
 Tasks from Project Board/PR Issue Number Associated with These Features:
 - #360 Bugfix: Fix Skills Timeline On Frontend
@@ -1014,6 +1017,9 @@ Tasks from Project Board/PR Issue Number Associated with These Features:
 - Portfolio Generation Flow Implementation
 - Thumbnail Upload Feature
 - Upload Zone Drag/Drop Bugfix
+- LinkedIn Post Generator modal
+- Interactive Web Portfolio Dashboard with search/filter
+- Section Visibility Controls for portfolio generation
 
 ---
 
@@ -1057,6 +1063,10 @@ Tasks from Project Board/PR Issue Number Associated with These Features:
 | 375 | Resume and portfolio modal improvements | Malik-Abhinav | Modal layout and contact header fix | Completed |
 | N/A | AI Analysis tab, OpenAI compatibility, Skills Timeline redesign, Filter engine bug fix | mishgGavura | LLM UI, OpenAI client fallback, timeline redesign, tag filter SQL fix | Completed |
 | N/A | Portfolio template expansion, generation flow, thumbnail upload, drag/drop bugfix, milestone demo video | kmerchant1 | Portfolio template and generation end-to-end | Completed |
+| N/A | LinkedIn Post Generator modal with hashtag/emoji toggles and clipboard copy | abdur026 | LinkedIn post generation from project data | Completed |
+| N/A | Interactive Web Portfolio Dashboard with global search and tag filtering | abdur026 | Portfolio dashboard UX | Completed |
+| N/A | Section visibility controls and backend hidden_sections serialization | abdur026 | Portfolio generation customization | Completed |
+| N/A | Merge conflict resolution (5 files) between dashboard-private-public-ar and develop | abdur026 | Integration and stabilization | Completed |
 | N/A | Milestone 3 Presentation Preparation and Delivery | abijeet-dhillon | Milestone 3 presentation | Completed |
 
 ---
@@ -1087,6 +1097,12 @@ All new work this sprint was accompanied by automated tests or build validation.
 - `tests/insights/test_skill_trends.py` — 2 tests passing after aligning `get_skill_trends` and `get_skill_progression` with the tag fix
 - Manual testing of upload consent paths (with/without AI checkbox), Overview vs AI Analysis tab, empty state, and `gpt-5.2` vs `gpt-4o-mini` model paths
 
+*Abdur (LinkedIn Post Generator, Portfolio Dashboard, Section Visibility Controls)*
+- 7 pytest tests for hidden sections serialization and model validation
+- All 35 backend tests passing after integration
+- Verified LinkedIn post modal, portfolio dashboard search/filter, and section visibility controls work end-to-end
+- Confirmed clean integration after resolving 5-file merge conflict
+
 *Kaiden (Portfolio Template, Generation, Thumbnails, Drag/Drop Fix)*
 - End-to-end testing of generation, rendering, and upload workflows
 - Verified generated sections render conditionally based on available profile and project data
@@ -1113,6 +1129,8 @@ This sprint brought Milestone 3 to a complete state across all planned feature a
 - *Dark Mode* was implemented across the frontend with CSS variable overrides and a global theme toggle. Cross-platform startup scripts (`start-miner.sh` / `start-miner.bat`) and updated README Quick Start documentation improve the onboarding experience.
 - *Thumbnail upload* and a *drag-and-drop bugfix* round out the UX improvements, with fallback handling for dropped ZIP files in Electron.
 - *Documentation* was updated with known bugs, installation guide improvements, and the Milestone 3 presentation was prepared and delivered.
+- The *LinkedIn Post Generator* was added as a per-project feature, wiring the existing `/linkedin/preview/{project_id}` backend endpoint to a frontend modal with hashtag and emoji toggles and one-click clipboard copy, requiring no new backend changes.
+- An *interactive portfolio dashboard* (`DashboardShell`) was built with global search and tag-based filtering for the generated portfolio site, and *section visibility controls* were added to the Electron portfolio modal so users can hide/show About Me, Skills, Skills Progression, Heatmap, Top Projects, and Projects Grid before generation. The backend `PortfolioSiteRequest` and `_build_portfolio_ts` were extended to serialize `hidden_sections` into the generated config.
 - OpenAI client compatibility was hardened with a fallback sequence (`max_tokens` → `max_completion_tokens` → no token param) to handle model/SDK mismatches across `gpt-5.2`, `gpt-4o-mini`, and other models.
 
 ---
