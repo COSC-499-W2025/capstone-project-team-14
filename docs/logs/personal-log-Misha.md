@@ -704,3 +704,92 @@ My contributions included:
 - Continue frontend–backend integration
 - Refine upload and filtering flows
 - Address feedback from presentations
+
+---
+
+## Semester 2 - Weeks 10 & 11 (Weeks 24-25 - March 15 to March 29, 2026)
+
+### Tasks
+![Misha Gavura Weeks 24-25 Task Type Screenshot](misha-week-mar29.png)
+
+---
+
+### Recap of Weekly Goals
+
+This two-week period focused on **surfacing LLM insights in the UI**, **OpenAI compatibility and config**, a **Skills Timeline redesign**, and **critical backend filter fixes** for tag-based search.
+
+My contributions included:
+- AI Analysis tab on the project detail panel (Overview / AI Analysis) with proper empty state when consent was not given
+- Backend `has_ai_analysis` on portfolio responses so template-only content is not shown as AI output
+- Robust OpenAI client behavior for model/SDK mismatches (`max_tokens` → `max_completion_tokens` → no token param)
+- `.env` documentation from `env.template` (API key, model, temperature, max tokens, log level)
+- `.gitignore` update: `data/` excluded so database files are not tracked
+- Skills Timeline: modern ClickUp-inspired layout, better filtering, styles (~900-line diff across tightly coupled CSS, component, tests), default model moved to `gpt-5.2` for token-limit behavior
+- Filter engine bug fix: language/framework/skill filters used an empty `skill_evidence` table; rewrote SQL to `json_each(project_info.tags_json)` with case-insensitive matching; fixed `get_skill_trends` and `get_skill_progression`
+- Manual and automated testing across upload consent paths, models (`gpt-5.2`, `gpt-4o-mini`), and filter/skill tests
+
+---
+
+### Features Owned in Project Plan
+- AI Analysis Tab (Project Detail Panel)
+- LLM / OpenAI Client Compatibility
+- Developer Environment & Ignore Rules (`.env`, `.gitignore`)
+- Skills Timeline UI Redesign
+- Project Filter & Skill Trends SQL Fixes
+
+---
+
+### Tasks Completed / In Progress
+| Area | Summary | Status |
+|------|---------|--------|
+| AI Analysis UI | Tabbed detail panel; shows summary, resume bullets, score, languages, frameworks, skills, attributes when AI-Enhanced Analysis was enabled | Completed |
+| Portfolio API | `has_ai_analysis` derived from resume bullet source (manual vs generated template) | Completed |
+| OpenAI stack | `resume_bullet_service.py` + `openai_client.py` fallback chain for token parameters vs pinned SDK 1.3.0 | Completed |
+| Skills Timeline | Restructure + filtering + `styles.css` + `SkillsTimeline.test.tsx` | Completed |
+| Filters / trends | Tag filtering via `tags_json`; skill trends & progression joins aligned | Completed |
+| Tooling | `data/` in `.gitignore`; `env.template` → `.env` guidance | Completed |
+
+---
+
+### What I Did
+
+**1. AI Analysis tab and portfolio semantics**
+- Added **Overview / AI Analysis** tabs on the project detail panel. The AI tab shows LLM-generated summary, resume bullets, project score, languages, frameworks, skills, and attributes only when **AI-Enhanced Analysis** was enabled at upload.
+- Projects without LLM consent show a clear **empty state** (“no AI analysis available”). Verified no LLM calls when consent is off; backend logs show AI bullets saved when consent is on.
+- Exposed **`has_ai_analysis`** on portfolio items so the UI does not treat **template-generated** resume bullets as AI output (uses source field in DB: manual vs generated).
+
+**2. OpenAI model and SDK compatibility**
+- Newer models (e.g. `gpt-5.2`, `o1`, `o3`) reject `max_tokens` and expect `max_completion_tokens`, while the pinned SDK may not expose that parameter.
+- Implemented a **fallback sequence**: try `max_tokens`, then `max_completion_tokens`, then omit token limits so varied model/SDK combinations work.
+- **Default model** updated to **`gpt-5.2`** where appropriate for token-limit behavior; `OPENAI_MODEL` still defaults to `gpt-4o-mini` if unset per `env.template` notes.
+
+**3. Environment and repository hygiene**
+- Documented copying **`env.template`** → **`.env`** with `OPENAI_API_KEY`, `OPENAI_MODEL`, `OPENAI_TEMPERATURE`, `OPENAI_MAX_TOKENS`, `LOG_LEVEL`.
+- Added **`data/`** to **`.gitignore`** so local database artifacts stay out of version control.
+
+**4. Skills Timeline redesign**
+- Redesigned **Skills Timeline** with a **ClickUp-inspired** UI: layout, filtering, and styling in one cohesive PR to avoid broken intermediate UI.
+- **`styles.css`** (+510 lines): layout classes, cards, animations, responsive rules.
+- **`SkillsTimeline.tsx`** (+530/-155): restructured JSX and filtering logic.
+- **`SkillsTimeline.test.tsx`**: additional tests for the new behavior.
+- Verified rendering, filtering, and multiple screen sizes; TypeScript clean.
+
+**5. Project filter and skill analytics bug fix**
+- **Languages / Frameworks / Skills** filters returned **zero** results because the engine joined an **unpopulated `skill_evidence`** table while tags live in **`project_info.tags_json`**.
+- Rewrote tag filtering SQL using **`json_each(tags_json)`** and **case-insensitive** matching.
+- Aligned **`get_skill_trends`** and **`get_skill_progression`** with the same fix.
+- Updated test fixtures with **`tags_json`**; **`pytest tests/insights/test_project_filter.py`** (38 tests) and **`pytest tests/insights/test_skill_trends.py`** (2 tests) pass. Manually confirmed filter panel returns matching projects.
+
+---
+
+### Additional Context
+- **Manual testing**: upload with/without AI checkbox; Overview vs AI Analysis tab; empty state; `gpt-5.2` vs `gpt-4o-mini` paths; TypeScript compiles with no errors.
+- **Documentation**: PR descriptions and env notes updated where applicable.
+- Large diffs are expected: CSS and a single component redesign are line-heavy but scoped to three files.
+
+---
+
+### Planning Activities for Next Cycle
+- Follow up on any remaining issue numbers / PR links once finalized
+- Continue hardening LLM and filter edge cases
+- Gather UX feedback on AI Analysis tab and Skills Timeline
